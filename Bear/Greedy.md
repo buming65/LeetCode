@@ -1,0 +1,2 @@
+# Greedy
+#Leetcode/algorithm/Greedy

@@ -1,0 +1,3 @@
+# Binary Search
+
+#Leetcode/structure
