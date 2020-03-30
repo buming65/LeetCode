@@ -1,4 +1,0 @@
-# Conclusion
-## Stack
-* 
-#Leetcode/Conclusion

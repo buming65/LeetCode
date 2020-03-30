@@ -1,3 +1,0 @@
-# Binary Trees
-
-#Leetcode/structure

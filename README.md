@@ -8,10 +8,22 @@
 
 
 
-## Back Tracing
+## Back Tracking
+
+
 
 
 
 
 
 ## Greedy
+
+
+
+
+
+
+
+
+
+## Sort Algorithm
