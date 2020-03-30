@@ -1,2 +1,17 @@
 # LeetCode
- LeetCode Solution
+
+## Dynamic Programming
+
+
+
+
+
+
+
+## Back Tracing
+
+
+
+
+
+## Greedy
