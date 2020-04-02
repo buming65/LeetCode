@@ -161,6 +161,169 @@ $$
 ### Solution 3. Divide and Conquer
 
 * Two Cases
-  * Base Cases: if the target is smaller than the smallest element(top-left corner) or greater than the greatest element(bottom-right corner), then it definitely not present.
-  * Recursive Cases: The target is potentially present. So search 
 
+  * Base Cases 
+    * if the target is smaller than the smallest element(top-left corner) 
+    * Greater than the greatest element(bottom-right corner), then it definitely not present.
+  * Recursive Cases 
+    * The target is potentially present. 
+    * Locate matrix (row-1, mid) < target < (row,mid). Search along the matrix's middle, if find during this process, return true
+    * Else, search (left, row, mid-1, down)(target < matrix(row, mid), target in the bottom-left part.) or (mid+1, up, right, row-1)(target > matrix(row,mid), target in the top-right part) (just two sectors of the matrix)
+
+  ```python
+  class Solution:
+      def searchMatrix(self, matrix, target):
+          """
+          :type matrix: List[List[int]]
+          :type target: int
+          :rtype: bool
+          """
+          if not matrix:
+              return False
+          def search(left, up, right, down):
+              if left > right or up > down:
+                  return False
+              if target < matrix[up][left] or target > matrix[down][right]:
+                  return False
+              
+              mid = left + (right - left)//2
+              
+              # Locate
+              row = up
+              while row <= down and matrix[row][mid] <= target:
+                  if matrix[row][mid] == target:
+                      return True
+                  row += 1
+              return search(left, row, mid - 1, down) or search(mid + 1, up, right, row - 1)
+          
+          return search(0, 0, len(matrix[0]) - 1, len(matrix) - 1)
+  ```
+
+* Complexity(Pending)
+
+  * Time
+    $$
+    O(nlogn)
+    $$
+
+  * Space
+    $$
+    O(logn)
+    $$
+
+### Solution 4. Search Space Reduction
+
+* From the bottom-left. 
+  * If current is larger than target, row up.
+  * If current is smaller than target, column right.
+
+```python
+class Solution:
+    def searchMatrix(self, matrix, target):
+        """
+        :type matrix: List[List[int]]
+        :type target: int
+        :rtype: bool
+        """
+        if not matrix:
+            return False
+        row = len(matrix)
+        col = len(matrix[0])
+        
+        r = row - 1
+        c = 0
+        
+        while r >= 0 and c < col:
+            if matrix[r][c] > target:
+                r -= 1
+            elif matrix[r][c] < target:
+                c += 1
+            else:
+                return True
+        return False
+```
+
+## 973. K Closest Points to Origin
+
+```
+We have a list of points on the plane.  Find the K closest points to the origin (0, 0).
+
+(Here, the distance between two points on a plane is the Euclidean distance.)
+
+You may return the answer in any order.  The answer is guaranteed to be unique (except for the order that it is in.)
+
+ 
+
+Example 1:
+
+Input: points = [[1,3],[-2,2]], K = 1
+Output: [[-2,2]]
+Explanation: 
+The distance between (1, 3) and the origin is sqrt(10).
+The distance between (-2, 2) and the origin is sqrt(8).
+Since sqrt(8) < sqrt(10), (-2, 2) is closer to the origin.
+We only want the closest K = 1 points from the origin, so the answer is just [[-2,2]].
+Example 2:
+
+Input: points = [[3,3],[5,-1],[-2,4]], K = 2
+Output: [[3,3],[-2,4]]
+(The answer [[-2,4],[3,3]] would also be accepted.)
+ 
+
+Note:
+
+1 <= K <= points.length <= 10000
+-10000 < points[i][0] < 10000
+-10000 < points[i][1] < 10000
+```
+
+### Solution 1. Sort
+
+* In python, default algorithm for sorted method is tim-sort which could be considered as the combination of merge sort and insertion sort.
+
+* Complexity
+
+  * Time
+    $$
+    O(NlogN)
+    $$
+
+  * Space
+    $$
+    O(N)
+    $$
+
+### Solution 2. Divide and Conquer
+
+* Quick Sort
+
+* Pick a random pivot, if K > mid, then all the element in the left will put out, and K-mid+1 elements will be sorted, saying the right list need partially sort. If K < mid, then partially sort the left side.
+
+  ```python
+  def kClosest(self, points, K):
+      dist = lambda i: points[i][0]**2 + points[i][1]**2
+  
+      def findKthSmallest(nums, start, end, kth):
+  	    # kth is zero based
+          left, right = start, end
+          mid = (left + right)//2
+          pivot = dist(mid)
+  
+          while left <= right:
+              while left <= right and dist(left) < pivot:
+                  left += 1
+              while left <= right and dist(right) > pivot:
+                  right -= 1
+              if left <= right:
+                  nums[left], nums[right] = nums[right], nums[left]
+                  left, right = left + 1, right - 1
+  
+          if kth <= right:
+              return findKthSmallest(nums, start, right, kth)
+          elif kth >= left:
+              return findKthSmallest(nums, left, end, kth)
+          else:
+              return nums[:kth+1]
+  
+      return findKthSmallest(points, 0, len(points) - 1, K-1)
+  ```

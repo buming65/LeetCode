@@ -19,7 +19,9 @@
 
 ## Greedy(Pending)
 
+* Find a localized optimum solution, may lead to globally optimized solutions.
 
+* Because the problem is an optimization, greedy algorithm use a priority queue.
 
 ## Back Tracking
 

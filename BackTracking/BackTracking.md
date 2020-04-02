@@ -160,3 +160,253 @@ Output: false
 
 
 ## 46. Permutations
+
+```
+Given a collection of distinct integers, return all possible permutations.
+
+Example:
+
+Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+```
+
+### Solution 1. Back Tracking
+
+* Go through all the position:
+  * Swap cur with first
+  * dfs(first + 1)
+  * Swap cur with first(ensure next time get the right answer)
+
+```python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        def dfs(first = 0):
+            if first == len(nums):
+                result.append(nums[:])
+            for i in range(first, len(nums)):
+                nums[first], nums[i] = nums[i], nums[first]
+                dfs(first+1)
+                nums[first], nums[i] = nums[i], nums[first]
+                
+        result = []
+        dfs(first = 0)
+        return result
+```
+
+* Complexity(Pending)
+
+  * Time
+    $$
+    
+    $$
+
+  * Space
+    $$
+    
+    $$
+
+## 39. Combination Sum
+
+```
+Given a set of candidate numbers (candidates) (without duplicates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
+
+The same repeated number may be chosen from candidates unlimited number of times.
+
+Note:
+
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+Example 1:
+
+Input: candidates = [2,3,6,7], target = 7,
+A solution set is:
+[
+  [7],
+  [2,2,3]
+]
+Example 2:
+
+Input: candidates = [2,3,5], target = 8,
+A solution set is:
+[
+  [2,2,2,2],
+  [2,3,3],
+  [3,5]
+]
+```
+
+### Solution 1. Back Tracking
+
+* For all the element in the candidates, check whether the remain is equal to the element.
+
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        result = []
+        candidates.sort()
+        
+        def dfs(remain, seq):
+            if remain == 0:
+                result.append(seq)
+                return
+            for item in candidates:
+                if item > remain:
+                    break
+                if seq and item < seq[-1]:
+                    continue
+                else:
+                    dfs(remain - item, seq + [item])
+        dfs(target, [])
+        return result
+```
+
+## 79. Word Search
+
+```
+Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+Example:
+
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+Given word = "ABCCED", return true.
+Given word = "SEE", return true.
+Given word = "ABCB", return false.
+ 
+
+Constraints:
+
+board and word consists only of lowercase and uppercase English letters.
+1 <= board.length <= 200
+1 <= board[i].length <= 200
+1 <= word.length <= 10^3
+```
+
+### Solution 1. Back Tracking
+
+* Find the first letter, search the adjacent cell. Then back tracking, and also put into original position.
+
+```python
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        def dfs(x, y, remain):
+            if len(remain) == 0:
+                return True
+            if x < 0 or x >= len(board) or y < 0 or y >= len(board[0]) or board[x][y] != remain[0]:
+                return False
+            temp = board[x][y]
+            board[x][y] = '~'
+            for a, b in [(0,1), (0,-1), (1,0), (-1,0)]:
+                ret = dfs(x+a,y+b,remain[1:])
+                if ret:
+                    return True
+            board[x][y] = temp
+            return False
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if dfs(i, j, word):
+                    return True
+
+        return False
+```
+
+## 93. Restore IP Addresses
+
+```
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+Example:
+
+Input: "25525511135"
+Output: ["255.255.11.135", "255.255.111.35"]
+```
+
+### Solution 1. Back Tracking
+
+* Iterate over three available slots `curr_pos` to place a dot.
+  - Check if the segment from the previous dot to the current one is valid :
+    - Yes :
+      - Place the dot.
+      - Check if all 3 dots are placed :
+        - Yes :
+          - Add the solution into the output list.
+        - No :
+          - Proceed to place next dots `backtrack(curr_pos, dots - 1)`.
+      - Remove the last dot to backtrack.
+
+```python
+class Solution:
+    def restoreIpAddresses(self, s: str) -> List[str]:
+        def valid(ip):
+            return int(ip) <= 255 if ip[0] != '0' else len(ip) == 1
+        
+        def insert(cur):
+            temp = s[cur+1:]
+            if valid(temp):
+                segments.append(temp)
+                result.append('.'.join(segments))
+                segments.pop()
+        def dfs(prev = -1, dots = 3):
+            for cur in range(prev + 1, min(len(s) - 1, prev + 4)):
+                segment = s[prev + 1: cur + 1]
+                if valid(segment):
+                    segments.append(segment)
+                    if dots == 1:
+                        insert(cur)
+                    else:
+                        dfs(cur, dots - 1)
+                    segments.pop()
+                    
+
+        result, segments = [], []
+        dfs() 
+        return result
+```
+
+![image-20200401203609547](BackTracking.assets/image-20200401203609547.png)
+
+## 1219. Path with Maximum Gold
+
+### Solution 1. Back Tracking
+
+* Just like 79. Word Search, go through all the possibility.
+
+```python
+class Solution:
+    def getMaximumGold(self, grid: List[List[int]]) -> int:
+        def dfs(row, col, cur):
+            if 0 <= row < len(grid) and 0 <= col < len(grid[0]) and grid[row][col] > 0 :
+                temp = grid[row][col]
+                grid[row][col] = 0
+                # to aviod repeat calculate
+                dfs(row,col-1,cur + temp)
+                dfs(row,col+1,cur + temp)
+                dfs(row-1,col,cur + temp)
+                dfs(row+1,col,cur + temp)
+                self.max_temp = max(self.max_temp, cur + temp)
+                grid[row][col] = temp
+                
+        self.max_temp = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] != 0:
+                    dfs(i,j,0)
+        return self.max_temp
+```
+
