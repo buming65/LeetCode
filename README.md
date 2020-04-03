@@ -89,76 +89,74 @@ Reference: [BackTracking](http://summerisgreen.com/blog/2017-07-07-2017-07-07-ç®
 * In-place && Not-in-place: whether require any extra space or not.
 * Stable && Not Stable: whether change the sequence of similar content in which they appear.
 
-* Sort Algorithms
+### Selection Sort 
 
-  * Selection Sort 
+* For the entire list, find the smallest element, put in the first position.
 
-    * For the entire list, find the smallest element, put in the first position.
+### Insertion Sort 
 
-  * Insertion Sort 
+* A sub-list is maintained sorted.
+* Search sequentially and unsorted items are moved and inserted into the sub-list.
+* To be short, just find element one by one, put into the right position.
 
-    * A sub-list is maintained sorted.
-    * Search sequentially and unsorted items are moved and inserted into the sub-list.
-    * To be short, just find element one by one, put into the right position.
+### Bubble Sort 
 
-  * Bubble Sort 
+* Compared each pair of adjacent elements, swap them if they are not in order.
 
-    * Compared each pair of adjacent elements, swap them if they are not in order.
+### Shell Sort 
 
-  * Shell Sort 
+* Based on Insertion Sort, avoid large shift.
 
-    * Based on Insertion Sort, avoid large shift.
+* Depend different gap value, combine the elements into a sorted list. Change gap.
 
-    * Depend different gap value, combine the elements into a sorted list. Change gap.
+* Based on Knuth's Formula, h is interval with initial value 1.
+  $$
+  \frac{3^k-1}{2}\  No\ greater\ than [N/3]
+  $$
 
-    * Based on Knuth's Formula, h is interval with initial value 1.
-      $$
-      \frac{3^k-1}{2}\  No\ greater\ than [N/3]
-      $$
+$$
+O(N^{\frac{3}{2}})
+$$
 
-    $$
-    O(N^{\frac{3}{2}})
-    $$
+* Based on the original Shell, 
+  $$
+  \frac{N}{2^k}
+  $$
 
-    * Based on the original Shell, 
-      $$
-      \frac{N}{2^k}
-      $$
+  $$
+  O(N^2)
+  $$
 
-      $$
-      O(N^2)
-      $$
+### Quick Sort 
 
-  * Quick Sort 
+* Split array into two arrays. One has the elements smaller than the pivot. The other has the elements greater than the pivot.
+* Has two points, the lower point, the higher point.
+* While left smaller than pivot, move right. While right greater than pivot, move left.
+* Else swap the two elements.
+* When left meet right, put the pivot in this position.
 
-    * Split array into two arrays. One has the elements smaller than the pivot. The other has the elements greater than the pivot.
-    * Has two points, the lower point, the higher point.
-    * While left smaller than pivot, move right. While right greater than pivot, move left.
-    * Else swap the two elements.
-    * When left meet right, put the pivot in this position.
+### Merge Sort 
 
-  * Merge Sort 
+* Based on Divide and Conquer Technique.
+* Divide into two groups until undivided.
+* Sort each group, merge them one by one.
 
-    * Based on Divide and Conquer Technique.
-    * Divide into two groups until undivided.
-    * Sort each group, merge them one by one.
+### Heap Sort 
 
-  * Heap Sort 
+* Based on Binary Heap data structure, which the parent is greater or smaller than children nodes.
+* Build Max Heap. Then the root should contain max element. Swap with the last element.
+* Heapify the max heap excluding the last element. Repeat this step.
 
-    * Based on Binary Heap data structure, which the parent is greater or smaller than children nodes.
-    * Build Max Heap. Then the root should contain max element. Swap with the last element.
-    * Heapify the max heap excluding the last element. Repeat this step.
+### Radix Sort 
 
-  * Radix Sort 
+* If the elements are in range from 1 to n^2, use Radix Sort.
+* Do digit by digit sort starting from least significant digit to most significant digit.
 
-    * If the elements are in range from 1 to n^2, use Radix Sort.
-    * Do digit by digit sort starting from least significant digit to most significant digit.
+### Bucket Sort 
 
-  * Bucket Sort 
-
-    * Set up an array of empty buckets.
-    * Scatter: put each element in bucket.
-    * Sort and merge.
+* Set up an array of empty buckets.
+* Scatter: put each element in bucket.
+* Sort and merge.
 
 ### Complexity
 
@@ -226,15 +224,71 @@ Reference: [BackTracking](http://summerisgreen.com/blog/2017-07-07-2017-07-07-ç®
 
 ### Binary Trees
 
-* 
+* A tree data structure in which each node has at most two children which are referred as left child and right child.
+* There are many types of binary tree like balanced binary tree, perfect binary tree...
 
 ### Binary Search Trees
 
+* A binary search tree is organized in a binary tree.
 
+* Binary Search Tree property: Node in the left subtree is no bigger than the parent node. Nodes in the right subtree is no smaller than the parent node.
+
+* Recursive Algorithms O(N):
+
+  * Preorder: Parent, Left, Right
+  * Inorder: Left, Parent, Right
+  * Postorder: Left, Right, Parent
+
+* Operations:
+
+  * Search O(H) h is the height of the tree: Begin search at root and traces downward.
+
+  * Minimum and Maximum O(H):
+
+    * Minimum: Begin root, follow left child until meet NULL.
+    * Maximum: Begin root, follow right child until meet NULL.
+
+  * Successor and Predecessor O(H):
+
+    * Successor: The node ahead of given node
+
+      * If right subtree is nonempty, the successor is the leftmost of the right subtree
+
+      * Else, the successor is the lowest ancestor of x whose left child is also an ancestor of x.
+
+      * ![image-20200403144902583](README.assets/image-20200403144902583.png)
+
+      * For node 13, it doesn't have right sub tree. So to find it successor, follow the path up, until the node have left child which is 15(6 also has left child but it's not in the path followed by 13)
+
+      * ```python
+        if x.right != NIL:
+            return TREE-MINIMUM(x.right)
+        y = x.parent
+        while y != NIL and x == y.right:
+            x = y
+            y = y.parent
+        return y
+        ```
+
+    * Predecessor: The node behind of given node(Same as successor)
+
+  * Insert O(H)
+
+    * Set trailing pointer y as the parent of x.
+
+  * Delete O(H)
+
+    * If no children, then simply remove it and modify its parent.
+    * If just one children, then we set that child to the original position, modify its parent.
+    * If has two children, find the successor(predecessor is also acceptable) to replace this node.
 
 ### Balanced Binary Search Trees
 
+* Balance: each operation makes local adjustments. There're many types of Balanced BST. Such as AVL, Red-Black, 
 
+#### AVL
+
+* For each node, the depths of its subtrees differ by at most 1.
 
 ### Hashing 
 
