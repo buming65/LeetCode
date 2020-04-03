@@ -4,7 +4,7 @@
 * Solution
 	* For the new calendar, see if there is an overlap in overlaps, if there is, it means triple booking.
 	* Also find the overlap between the new calendar with other calendars, if there is overlap, means double booking. And if there is another overlap, then triple booking.
-```
+```python
 class MyCalendarTwo:
 
     def __init__(self):

@@ -178,17 +178,55 @@ Reference: [BackTracking](http://summerisgreen.com/blog/2017-07-07-2017-07-07-ç®
 
 
 
-### Stack 
+### Stack (LIFO)
 
+* A last-in, first-out policy which means the element deleted from the set is the one most recently inserted. 
+  * S.top: indexes the most recently inserted element.
+* Bottom: S[1]
+* Top: S[S.top]. When S.top == 0, the stack is empty. It could be test by STACK-EMPTY. **Overflows** means top exceeds. **Underflows** means empty stack, cause error when pop.
+* Operations, all these three operations are O(1) :
+  * STACK-EMPTY(S)
+  * PUSH(S, x)
+  * POP(S)
 
+### Queue (FIFO)
 
-### Queue
-
-
+* A first-in, first-out policy which means the element deleted from the set is the one that has been in the set for the longest time. 
+  * Head: The head of the line
+  * Tail: The end of the line
+* When head == tail, empty queue. If attempt to dequeue the queue, cause underflows. When head == tail + 1 or (head == 1 and tail == length), full queue. If attempt to enqueue, cause overflows.
+* Operations:
+  * ENQUEUE: Insert operation. 
+  * DEQUEUE: Delete operation. 
 
 ### Linked List
 
+* The objects are arranged in a linear order, provide a simple, flexible representation for dynamic sets.
+* Linked List have several forms, it may be either singly or doubly, it may be sorted or not, and it may be circular or not.
 
+#### Singly Linked List
+
+* No prev compared to the doubly linked list.
+
+#### Doubly Linked List
+
+* Each element is an object with key, next and prev.
+  * x.next points to its successor
+  * x.prev points to its predecessor
+* Head means the first element, tail means the last element.
+
+#### Operations
+
+* Search: Find the first element with key k. O(N)
+* Insert: Given an element with specific key, insert into the from of the linked list. O(1)
+* Delete: Delete specific key. Worst: O(N)
+  * Could be simpler if ignore the boundary conditions at the head and tail of the list.(Sentinel)
+  * x.prev.next = x.next
+  * x.next.prev = x.prev
+
+### Binary Trees
+
+* 
 
 ### Binary Search Trees
 
@@ -203,3 +241,9 @@ Reference: [BackTracking](http://summerisgreen.com/blog/2017-07-07-2017-07-07-ç®
 
 
 ### Priority Queues(Heaps)
+
+
+
+## Search Algorithms
+
+### 
