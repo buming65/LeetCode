@@ -86,8 +86,13 @@ Reference: [BackTracking](http://summerisgreen.com/blog/2017-07-07-2017-07-07-ç®
 
 ### Overview
 
+* More detail conclusion: [sort][https://www.cnblogs.com/onepixel/p/7674659.html]
+
 * In-place && Not-in-place: whether require any extra space or not.
 * Stable && Not Stable: whether change the sequence of similar content in which they appear.
+* Comparison or not:
+  * Comparison: ...
+  * Other: radix, bucket
 
 ### Selection Sort 
 
@@ -149,7 +154,7 @@ $$
 
 ### Radix Sort 
 
-* If the elements are in range from 1 to n^2, use Radix Sort.
+* If the elements are in range from 1 to $n^2$, use Radix Sort.
 * Do digit by digit sort starting from least significant digit to most significant digit.
 
 ### Bucket Sort 
@@ -160,13 +165,47 @@ $$
 
 ### Complexity
 
-#### Time Complexity
+* Overview
 
+  | Method    | Average                                                      | Worst                                                        | Best                                                         | Space                                                        | Stable |
+  | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
+  | Selection | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | 1                                                            | No     |
+  | Insertion | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | *$n*$                                                        | 1                                                            | Yes    |
+  | Bubble    | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | $n$                                                          | 1                                                            | Yes    |
+  | Shell     | ![{\displaystyle n^{4/3}}](README.assets/58700f91e1128751a77a128ffa8c515747cd671d-1585976083303-1585976084312.svg) | ![{\displaystyle n^{4/3}}](README.assets/58700f91e1128751a77a128ffa8c515747cd671d-1585976083303-1585976084312.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | 1                                                            | No     |
+  | Quick     | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620-1585976200891-1585976203006.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![\log n](README.assets/317ab5292da7c7935aec01a570461fe0613b21d5.svg) | No     |
+  | Merge     | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | *$n*$                                                        | Yes    |
+  | Heap      | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | 1                                                            | No     |
+  | Radix     | $n*k$                                                        | $n*k$                                                        | $n*k$                                                        | $n+k$                                                        | Yes    |
+  | Bucket    | $n+k$                                                        | $n+k$                                                        | $n+k$                                                        | $n+k$                                                        | Yes    |
 
+### Lower Bound for Comparison Sorting Algorithms
 
-#### Space Complexity
+* Any comparison sort  must take $O(nlogn)$ comparisons in the worst case to sort $n$ elements.
 
+* Proof (Assume all the input elements are distinct
 
+  * ![image-20200404140229169](README.assets/image-20200404140229169.png)
+
+  * Represent the computation of a comparison sorting algorithm by its decision tree $T$.
+
+  * Nodes: Comparisons
+
+  * Leaves: Permutations
+
+  * So number of leaves $l$ in $T\ge n!$ , Because each of the $n!$ permutations of the input will appear as some leaf.
+
+  * And since the height $h$ has no more than $2^h$ leaves, so we get $n! \le l \le 2^h$. 
+
+  * Then $h \ge log(n!)$ and $ log(n!) = O(nlogn)$
+
+    * Stirling formula
+
+    ![image-20200404141515979](README.assets/image-20200404141515979.png)
+
+    * The other way
+
+      ![image-20200404141504207](README.assets/image-20200404141504207.png)
 
 
 
@@ -215,9 +254,9 @@ $$
 
 #### Operations
 
-* Search: Find the first element with key k. O(N)
-* Insert: Given an element with specific key, insert into the from of the linked list. O(1)
-* Delete: Delete specific key. Worst: O(N)
+* Search: Find the first element with key k. $O(N)$
+* Insert: Given an element with specific key, insert into the from of the linked list. $O(1)$
+* Delete: Delete specific key. Worst: $O(N)$
   * Could be simpler if ignore the boundary conditions at the head and tail of the list.(Sentinel)
   * x.prev.next = x.next
   * x.next.prev = x.prev
@@ -226,6 +265,7 @@ $$
 
 * A tree data structure in which each node has at most two children which are referred as left child and right child.
 * There are many types of binary tree like balanced binary tree, perfect binary tree...
+* 
 
 ### Binary Search Trees
 
@@ -233,7 +273,7 @@ $$
 
 * Binary Search Tree property: Node in the left subtree is no bigger than the parent node. Nodes in the right subtree is no smaller than the parent node.
 
-* Recursive Algorithms O(N):
+* Recursive Algorithms $O(N)$:
 
   * Preorder: Parent, Left, Right
   * Inorder: Left, Parent, Right
@@ -241,14 +281,14 @@ $$
 
 * Operations:
 
-  * Search O(H) h is the height of the tree: Begin search at root and traces downward.
+  * Search $O(H)$ h is the height of the tree: Begin search at root and traces downward.
 
-  * Minimum and Maximum O(H):
+  * Minimum and Maximum $O(H)$:
 
     * Minimum: Begin root, follow left child until meet NULL.
     * Maximum: Begin root, follow right child until meet NULL.
 
-  * Successor and Predecessor O(H):
+  * Successor and Predecessor $O(H)$:
 
     * Successor: The node ahead of given node
 
@@ -272,15 +312,16 @@ $$
 
     * Predecessor: The node behind of given node(Same as successor)
 
-  * Insert O(H)
+  * Insert $O(H)$
 
     * Set trailing pointer y as the parent of x.
 
-  * Delete O(H)
+  * Delete $O(H)$
 
     * If no children, then simply remove it and modify its parent.
     * If just one children, then we set that child to the original position, modify its parent.
-    * If has two children, find the successor(predecessor is also acceptable) to replace this node.
+    * If has two children, f2
+    * ind the successor(predecessor is also acceptable) to replace this node.
 
 ### Balanced Binary Search Trees
 
@@ -290,14 +331,186 @@ $$
 
 * For each node, the depths of its subtrees differ by at most 1.
 
-### Hashing 
+### Hash
 
+#### Direct-address Tables
 
+![image-20200403193917574](README.assets/image-20200403193917574.png)
+
+* All the operations takes $O(1)$ time.
+* Search
+* Insert
+* Delete
+
+#### Hash Tables
+
+* Use Hash Function to compute the slot from the key. Map the universe keys into the slots of a hash table T[0...m-1]
+
+* Could cause Collision.
+
+  * Chaining: All the elements that hash to the same slot into the same linked list.
+
+    * The worst insertion is O(1)
+    * The worst search depends on the length of the list.
+    * ![image-20200403204538807](README.assets/image-20200403204538807.png)
+
+  * Open addressing
+
+    * Linear Probing
+
+      * $$
+        h(k, i) = (h'(k) +i)mod\ m
+        $$
+
+    * Quadratic Probing
+
+      * $$
+        h(k,i)=(h'(k)+c_1i+c_2i^2)mod\ m
+        $$
+
+      * Could be the situation that:
+
+      * $$
+        1^2,-1^2,2^2,-2^2,3^2,-3^2...
+        $$
+
+    * Double Hashing
+
+      * $$
+        h(k,i)=(h_1(k)+ih_2(k))mod\ m
+        $$
+
+      * There are two hash function h1 and h2, once conflict, use the formula to find the next position.
 
 ### Priority Queues(Heaps)
 
-
+* An extension of queue in which each element is associated with a priority and is served according to its priority.
+* Min-heap or Max-heap
+* Operations
+  * Insert O(log n)
+    * Insert the new element at the end of the tree, heapify the tree.
+  * Delete O(log n)
+    * Swap the element with the last element, remove the last element, heapify the tree.
+  * Search
+    * Return the root.
+  * Extractmin
+    * Swap the root with the last element, heapify.
 
 ## Search Algorithms
 
-### 
+### Overview
+
+
+
+### Binary Search
+
+* A fast search algorithm with run-time of $O(logn)$. Works on the principle of divide and conquer. And the data collection should be sorted.
+* $mid = low + (high-low)/2$, determine half of the array.
+
+## Graph
+
+### Overview
+
+* Graph $G=(V, E)$, $V\  node, E\  edge$
+
+* Two types of graph:
+  * Undirected graph
+  * Directed graph
+* Two types to representation
+  * Sparse Graphs 
+  * Adjacency List (When$|E|\ is\ much\ less\ than\ |V|^2$)
+  * ![image-20200404145556564](README.assets/image-20200404145556564.png)
+
+* Weight or not Weight
+* cyclic or acyclic
+
+* Connected Components for Undirected Graphs.
+  * An induced subgraph C of G is a connected component if
+    * C is connected
+    * There is no path from C to any vertex not in C
+
+* Strong Connectivity for Directed Graphs.
+* Transitive closure
+  * Graph $G^{*}=(V,E^{*})$. For each $(u,v) \in E^{*} $ iff there is a path from $u$ to $v$ in G
+  * ![image-20200404152039228](README.assets/image-20200404152039228.png)
+* Minimum Spanning Trees
+  * From the graph $G=(V,E)$, we want to find the acyclic subset $T\in E$ that connects all of the vertices and the total weight is minimized.
+
+### DFS
+
+* Find until not found
+* $O(V+E)$
+
+### BFS
+
+* Use queue to remember the neighbor for each node.
+* $O(V+E)$
+* Find the shortest path.
+
+### Topological Sort
+
+* DAG: Directed Acyclic Graph
+* A topological sort is a linear ordering of all its vertices such that if $G$ contains an edge $(u,v)$, then $u$ appears before $v$ in the ordering. 
+* If the graph contains a cycle, then no linear ordering is possible. And there could be more than one topological sorting for a graph. 
+
+#### DFS Algorithm
+
+* Use a temporary stack. Recursively call functions for all adjacent vertices, push it to a stack. 
+* ![image-20200404164603206](README.assets/image-20200404164603206.png)
+* Refer: [DFS For topological sort][https://www.geeksforgeeks.org/topological-sorting/]
+
+### Transitive Closure Algorithm(Floyd-Warshall Algorithm)
+
+* Based on Dynamic Programming, To find the shortest path between tow nodes.
+* All-Pairs Shortest Paths, In a Weighted Graph with positive or negative edge weights(but with no negative cycles)
+* In each iteration $k,\ T[u,v] = 1$ iff there is a path from $u$ to $v$ using intermediate vertices in $\{1, 2, ... , k\}$ 
+* ![image-20200404183334500](README.assets/image-20200404183334500.png)
+* ![image-20200404183414703](README.assets/image-20200404183414703.png)
+* Run time is $O(n^3)$
+
+### Bellman-Ford Algorithm
+
+* Based on Dynamic Programming
+* The edge weights could be negative
+* First calculate at-most one edges, then at-most two edges...
+* $dist^{1}[u] = arcs[v_0][u]$
+  $dist^k[u] = min\{dist^{k-1}[u],min\{dist^{k-1}[i]+arcs[i][u]\}\}\ for \ i \ in \ all \ the \ nodes$
+* ![image-20200404200902079](README.assets/image-20200404200902079.png)
+* ![image-20200404201053232](README.assets/image-20200404201053232.png)
+* Run time is $O(VE)$
+
+### Dijkstra Algorithm
+
+* Based on Greedy Algorithm, To find the shortest path.
+* All edge weights are nonnegative.
+* Maintains a set $S$ of vertices whose final shortest-path weights from the source $s$ have already been determined. Then repeatedly selects the vertex $u\in\ V-S$ with the minimum shortest-path estimate, adds $u$ to $S$, relaxes all edges leaving $u$.
+* ![image-20200404193510937](README.assets/image-20200404193510937.png)
+* ![image-20200404201030560](README.assets/image-20200404201030560.png)
+* Run time is $O(n^2)$
+
+### Kruskal Algorithm
+
+* Based on Greedy Algorithm, To find the Minimum Spanning Trees.
+
+* Find the minimum weight edge.
+
+* ![image-20200404204853401](README.assets/image-20200404204853401.png)
+
+* ![image-20200404205217467](README.assets/image-20200404205217467.png)
+
+  ![image-20200404205407658](README.assets/image-20200404205407658.png)
+
+* Run time is $O(ElogV)$
+
+### Prim Algorithm
+
+* Based on Greedy Algorithm, To find the Minimum Spanning Trees.
+* ![image-20200404210354208](README.assets/image-20200404210354208.png)
+* ![image-20200404205112869](README.assets/image-20200404205112869.png)
+
+* Run time is $O(E+VlogV)$
+
+## Advanced Data Structures
+
+
+

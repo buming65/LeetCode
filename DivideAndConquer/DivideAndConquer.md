@@ -86,11 +86,35 @@ class Solution:
 
 ### Solution 2. Greedy
 
+* current element
+* current element + local sum
 
+```python
+class Solution:    
+    def maxSubArray(self, nums: List[int]) -> int:
+        max_sum = cur_sum = nums[0]
+        for i in range(1, len(nums)):
+            cur_sum = max(cur_sum + nums[i], nums[i])
+            max_sum = max(cur_sum, max_sum)
+        
+        return max_sum
+```
 
 ### Solution 3. DP
 
+* DP[i] = max(DP[i-1], 0) + arr[i]
 
+```python
+class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        max_sum = nums[0]
+        
+        for i in range(1, len(nums)):
+            if nums[i-1] > 0:
+                nums[i] = nums[i] + nums[i-1]
+            max_sum = max(max_sum, nums[i])
+        return max_sum
+```
 
 
 
