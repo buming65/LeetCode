@@ -514,3 +514,6 @@ $$
 
 
 
+## Master Theorem Method
+
+* 
