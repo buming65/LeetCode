@@ -167,17 +167,17 @@ $$
 
 * Overview
 
-  | Method    | Average                                                      | Worst                                                        | Best                                                         | Space                                                        | Stable |
-  | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------ |
-  | Selection | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | 1                                                            | No     |
-  | Insertion | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | *$n*$                                                        | 1                                                            | Yes    |
-  | Bubble    | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620.svg) | $n$                                                          | 1                                                            | Yes    |
-  | Shell     | ![{\displaystyle n^{4/3}}](README.assets/58700f91e1128751a77a128ffa8c515747cd671d-1585976083303-1585976084312.svg) | ![{\displaystyle n^{4/3}}](README.assets/58700f91e1128751a77a128ffa8c515747cd671d-1585976083303-1585976084312.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | 1                                                            | No     |
-  | Quick     | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n^{2}](README.assets/ac9810bbdafe4a6a8061338db0f74e25b7952620-1585976200891-1585976203006.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![\log n](README.assets/317ab5292da7c7935aec01a570461fe0613b21d5.svg) | No     |
-  | Merge     | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | *$n*$                                                        | Yes    |
-  | Heap      | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | ![n\log n](README.assets/560dfdce0353a330e03e4b3e0b7ca6e484bb40fb.svg) | 1                                                            | No     |
-  | Radix     | $n*k$                                                        | $n*k$                                                        | $n*k$                                                        | $n+k$                                                        | Yes    |
-  | Bucket    | $n+k$                                                        | $n+k$                                                        | $n+k$                                                        | $n+k$                                                        | Yes    |
+  | Method    | Average    | Worst     | Best    | Space  | Stable |
+  | --------- | ---------- | --------- | ------- | ------ | ------ |
+  | Selection | $n^2$      | $n^2$     | $n^2$   | 1      | No     |
+  | Insertion | $n^2$      | $n^2$     | $n$     | 1      | Yes    |
+  | Bubble    | $n^2$      | $n^2$     | $n$     | 1      | Yes    |
+  | Shell     | $n^{1.25}$ | $n^{1.5}$ | $nlogn$ | 1      | No     |
+  | Quick     | $nlogn$    | $n^2$     | $nlogn$ | $logn$ | No     |
+  | Merge     | $nlogn$    | $nlogn$   | $nlogn$ | $n$    | Yes    |
+  | Heap      | $nlogn$    | $nlogn$   | $nlogn$ | 1      | No     |
+  | Radix     | $n*k$      | $n*k$     | $n*k$   | $n+k$  | Yes    |
+  | Bucket    | $n+k$      | $n^{2}$   | $n+k$   | $n+k$  | Yes    |
 
 ### Lower Bound for Comparison Sorting Algorithms
 
@@ -517,4 +517,17 @@ $$
 
 ## Master Theorem Method
 
-* 
+* Provides bounds for recurrences of the form
+  $$
+  T(n) = aT(\frac{n}{b}) +f(n)
+  $$
+  where $a\ge 1, b\ge 1$ and $f(n)$ is a given function which arise frequently. And there are three cases .
+
+  * If $f(n) = O(n^{log_b(a-\varepsilon)})$ for some constant $\varepsilon > 0$, then $T(n)=O(n^{log_b{a}})$
+  * If $f(n) = O(n^{log_b(a)})$then $T(n)=O(n^{log_b{a}}lgn)$
+  * If $f(n) = O(n^{log_b(a+\varepsilon)})$ for some constant $\varepsilon > 0$, and if $af(n/b) \le cf(n)$ for some constant $c < 1$ and all sufficiently large $n$, then $T(n)=O(f(n))$
+
+* To be short(but not so actually), just compare $f(n) \ with \ n^{log_b(a)}$
+  * The first is smaller than the formula
+  * The second is equal to the formula
+  * The third is greater than the formula
