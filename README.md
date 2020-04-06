@@ -387,6 +387,7 @@ $$
 * An extension of queue in which each element is associated with a priority and is served according to its priority.
 * Min-heap or Max-heap
 * Operations
+  * Build $O(N)$
   * Insert O(log n)
     * Insert the new element at the end of the tree, heapify the tree.
   * Delete O(log n)
