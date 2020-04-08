@@ -531,3 +531,13 @@ $$
   * The first is smaller than the formula
   * The second is equal to the formula
   * The third is greater than the formula
+
+## Recursion and Iteration
+
+### Recursion
+
+* Call itself
+
+### Iteration
+
+* Use a loop
