@@ -17,6 +17,73 @@
   * Construct an optimal solution from computed information.
 * Optimal Substructure
 
+### Manacher's Algorithm
+
+* Used for the palindromic problems. I think it's kind of DP solution.
+
+#### Traditional DP Solution
+
+* Set a $N*N$ matrix, store each substring condition.
+* $dp[i,i] = True$
+* $dp[j,i] = (s[i]==s[j])\ if\ i-j >=2$
+* $dp[j,i] = (s[i]==s[j]\ and \ dp[j+1][i-1])$
+
+#### Expand Around Center
+
+* Choose a center, compare the left and right. If same, then $left--, \ right++$. And the number of palindromic substring ++.
+* Time $O(N^2)$, Space $O(1)$
+
+```python
+for center in range(len(s)):
+    self.helper(s, center, center)
+    self.helper(s, center-1, center)
+
+helper(s, left, right):
+    while left >= 0 and right < len(s) and s[left] == s[right]:
+        left -= 1
+        right += 1
+```
+
+#### Manacher Algorithm
+
+[Refer][https://www.cxyxiaowu.com/2665.html]
+
+* To solve the problem of odd and even, insert $\#$ between each char. And "^" in the begin, "$" in the end.
+
+* Define $P[i]$ as the radius of the largest length of substring centered at index $i$. 
+
+* Suppose $R$ is the rightmost boundary of the longest substring centered at $i$, so we could say that $P[i] = R-i(1 \le i \le 2N-1)$ 
+
+* Suppose $C$ is the center of the substring, $i$ is the position of an element whose span of palindromic is being determined, and $i$ is always at the right of C. $i'$ is the mirror position of $i$ with the center of $C$. 
+
+*  Here is an example for the $P$ list.
+
+  ```python
+  i = 0 1 2 3 4 5 6 7 8
+  T = # a # b # b # a #
+  P = 0 1 0 1 4 1 0 1 0
+  ```
+
+* So we can see the longest of the palindromic substring is $4$ which is actually the length of $abba$. But how to determine the index
+
+  * Actually the start of the substring is $(i-P[i])/2$ 
+  * For $4, \ i=4, \ 4-4 = 0$, so start at $0$ 
+
+* There're some condition.
+
+  * If $p[i']\ is \ small\ than\ R-i$, it means there are mirror, so $p[i]=p[i']$ 
+  * If $p[i']\ is \ equal\ than\ R-i$, it means that $i'$ could meet the left most boundary in the string, but $i$ may expand to the right, so $p[i]=p[i']$ then continue expand around center.
+  * If $p[i']\ is \ bigger\ than\ R-i$, that means $p[i]$ couldn't be bigger than $R-i$ , so $p[i]=R-i$. Here is the prove
+    * Consider there is a position called $a$ in the right of $R$, that is same as the position called $b$ between $C$ and $i$. 
+    * As the $C$ is palindromic, so there must be a position called $d$ between $i'$ and $C$, that $d==b$ 
+    * And $p[i'] > R-i$ , so there must have some element beyond the left most boundary of the radius of $C$. So we could expand the radius for $C$ which means $R$ will be larger.
+
+* Conclusion:
+
+  * $P[i] = min(R-i,P[i'])$
+  * Attempt to expand from $i+P[i]+1$ and $i-P[i]-1$
+  * $if \ i+P[i] > R: \ C,\ R = i, i+P[i]$
+
 ## Greedy(Pending)
 
 * Find a localized optimum solution, may lead to globally optimized solutions.
@@ -541,3 +608,5 @@ $$
 ### Iteration
 
 * Use a loop
+
+## 
