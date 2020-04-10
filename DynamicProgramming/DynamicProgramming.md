@@ -462,3 +462,124 @@ class Solution:
 * Complexity:
   * Time $O(N^2)$
   * Space $O(1)$
+
+## 494. Target Sum
+
+```
+You are given a list of non-negative integers, a1, a2, ..., an, and a target, S. Now you have 2 symbols + and -. For each integer, you should choose one from + and - as its new symbol.
+
+Find out how many ways to assign symbols to make sum of integers equal to target S.
+
+Example 1:
+Input: nums is [1, 1, 1, 1, 1], S is 3. 
+Output: 5
+Explanation: 
+
+-1+1+1+1+1 = 3
++1-1+1+1+1 = 3
++1+1-1+1+1 = 3
++1+1+1-1+1 = 3
++1+1+1+1-1 = 3
+
+There are 5 ways to assign symbols to make the sum of nums be target 3.
+Note:
+The length of the given array is positive and will not exceed 20.
+The sum of elements in the given array will not exceed 1000.
+Your output answer is guaranteed to be fitted in a 32-bit integer.
+```
+
+### Solution 1. DP
+
+* Set the key as the number of total sum, the value is the times that could reach this value at this point.
+* So every time, use the last dictionary to compute the next dictionary
+* For the last dictionary, the $key==S$ is the result.
+
+```python
+class Solution:
+    def findTargetSumWays(self, nums: List[int], S: int) -> int:
+        if not nums or sum(nums) < S:
+            return 0
+        dic = {0:1}
+        for i in range(len(nums)):
+            temp = collections.defaultdict(int)
+            for d in dic:
+                temp[d+nums[i]] += dic[d]
+                temp[d-nums[i]] += dic[d]
+            dic = temp
+        return dic[S]
+```
+
+## 416. Partition Equal Subset Sum
+
+```
+Given a non-empty array containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.
+
+Note:
+
+Each of the array element will not exceed 100.
+The array size will not exceed 200.
+ 
+
+Example 1:
+
+Input: [1, 5, 11, 5]
+
+Output: true
+
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+ 
+
+Example 2:
+
+Input: [1, 2, 3, 5]
+
+Output: false
+
+Explanation: The array cannot be partitioned into equal sum subsets.
+```
+
+### Solution 1. DP
+
+* Key is the sum, value is Boolean, indicate that this sum could be reached or not.
+* Since the two subarray are equal in sum, so target could be determined.
+* Plus this number only could reach in $nums[i], target$, Beyond target are not considered.
+* And if $dp[j-nums[i]]$ is true, that means $dp[j]$ is reachable since there's already a sum.
+* So the formula could be $dp[i] = dp[i]\ ||\ dp[i-sum]$ 
+
+```python
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        sum_nums = sum(nums)
+        if sum_nums % 2 != 0:
+            return False
+        target = int(sum_nums / 2)
+        dp = [False] * (sum_nums + 1)
+        dp[0] = True
+        
+        for num in nums:
+            for i in range(target, num - 1, -1):
+                dp[i] = (dp[i] or dp[i - num])
+        return dp[target] == True
+
+```
+
+```python
+class Solution:
+    def canPartition(self, nums: List[int]) -> bool:
+        sum_nums = sum(nums)
+        if sum_nums % 2 != 0:
+            return False
+        target = int(sum_nums / 2)
+        dp = [False] * (sum_nums + 1)
+        dp[0] = True
+        
+        for num in nums:
+            for i in range(sum_nums, -1, -1):
+                if dp[i]:
+                    dp[num+i] = dp[i] 
+        return dp[target] == True
+
+```
+
+
+

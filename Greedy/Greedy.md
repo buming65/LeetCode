@@ -335,3 +335,97 @@ class Solution:
         return count 
 ```
 
+## 621. Task Scheduler
+
+```
+Given a char array representing tasks CPU need to do. It contains capital letters A to Z where different letters represent different tasks. Tasks could be done without original order. Each task could be done in one interval. For each interval, CPU could finish one task or just be idle.
+
+However, there is a non-negative cooling interval n that means between two same tasks, there must be at least n intervals that CPU are doing different tasks or just be idle.
+
+You need to return the least number of intervals the CPU will take to finish all the given tasks.
+
+ 
+
+Example:
+
+Input: tasks = ["A","A","A","B","B","B"], n = 2
+Output: 8
+Explanation: A -> B -> idle -> A -> B -> idle -> A -> B.
+ 
+
+Constraints:
+
+The number of tasks is in the range [1, 10000].
+The integer n is in the range [0, 100].
+```
+
+### Solution 1. Formula
+
+* Assume $n=4, tasks=[A,A,A,A,B,B,B,C,C,C]$
+
+* ```
+  A B C idle idle
+  A B C idle idle
+  A B C idle idle 
+  A
+  ```
+
+* Consider this as a matrix, the length is $n+1$, the width is $maxvalue -1$ 
+
+* For the last row, for values in the task, if value equal max_value, it will add one.
+
+* If, n is too small, then it's just the length of tasks
+
+```python
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        dic = collections.defaultdict(int)
+        for task in tasks:
+            dic[task] += 1
+        
+        max_val = max(dic.values())
+        
+        total = (max_val-1) * (n + 1)
+        for key, value in dic.items():
+            if value == max_val:
+                total += 1
+        return max(total, len(tasks))
+```
+
+### Solution 2. Priority Queues
+
+* I think it's same as the solution 1.
+
+## 406. Queue Reconstruction by Height
+
+```
+Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), where h is the height of the person and k is the number of people in front of this person who have a height greater than or equal to h. Write an algorithm to reconstruct the queue.
+
+Note:
+The number of people is less than 1,100.
+
+ 
+Example
+
+Input:
+[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+
+Output:
+[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+```
+
+### Solution 1. Greedy
+
+* Sort by height, and the index, ensure that higher people will relocate first. By index is to ensure there must have equal height before the element.
+* Then insert into answer, that ensure the person put on the index based on p[1] will have that many taller people before him
+
+```python
+class Solution:
+    def reconstructQueue(self, people: List[List[int]]) -> List[List[int]]:
+        people.sort(key = lambda x: (-x[0],x[1]))
+        ans = []
+        for p in people:
+            ans.insert(p[1],p)
+        return ans
+```
+
