@@ -581,5 +581,112 @@ class Solution:
 
 ```
 
+## 322. Coin Change
 
+```
+You are given coins of different denominations and a total amount of money amount. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+
+Example 1:
+
+Input: coins = [1, 2, 5], amount = 11
+Output: 3 
+Explanation: 11 = 5 + 5 + 1
+Example 2:
+
+Input: coins = [2], amount = 3
+Output: -1
+Note:
+You may assume that you have an infinite number of each kind of coin.
+```
+
+### Solution 1. DP
+
+* Like the last problem, the key is the sum, the value is the min number of coins that reach this sum.
+* $dp[i] = min(dp[i], dp[i-num]+1)$
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        dp = [float('inf')] * (amount + 1)
+        dp[0] = 0
+        for num in coins:
+            for i in range(num, amount+1):
+                dp[i] = min(dp[i], dp[i-num]+1)
+        return dp[amount] if dp[amount] != float('inf') else -1
+    
+```
+
+## 309. Best Time to Buy and Sell Stock with Cooldown
+
+```
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:
+
+You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+After you sell your stock, you cannot buy stock on next day. (ie, cooldown 1 day)
+Example:
+
+Input: [1,2,3,0,2]
+Output: 3 
+Explanation: transactions = [buy, sell, cooldown, buy, sell]
+```
+
+### Solution 1. DP
+
+* 
+
+```
+
+```
+
+## 300. Longest Increasing Subsequence
+
+```
+Given an unsorted array of integers, find the length of longest increasing subsequence.
+
+Example:
+
+Input: [10,9,2,5,3,7,101,18]
+Output: 4 
+Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4. 
+Note:
+
+There may be more than one LIS combination, it is only necessary for you to return the length.
+Your algorithm should run in O(n2) complexity.
+Follow up: Could you improve it to O(n log n) time complexity?
+```
+
+### Solution 1. DP
+
+* Key is the number in the input list, value is the number of elements before that are smaller than this number.
+* $DP[x]=max(DP[i])+1,0\le i \le x$
+
+```python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        if len(nums) == 0:
+            return 0
+        dp = [0] * len(nums)
+        for i in range(len(nums)):
+            temp = 0
+            for j in range(i+1):
+                if nums[j] < nums[i]:
+                    temp = max(temp, dp[j])
+            dp[i] = temp + 1
+        return max(dp)
+```
+
+* Complexity:
+  * Time $O(n^2)$
+  * Space $O(n)$
+
+### Solution 2. DP + Binary Search(PENDING)
+
+* Use Binary Search to make the time complexity become $O(nlogn)$
+* [Refer][https://leetcode.com/problems/longest-increasing-subsequence/discuss/74824/JavaPython-Binary-search-O(nlogn)-time-with-explanation]
+
+```
+
+```
 
