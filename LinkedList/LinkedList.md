@@ -142,3 +142,125 @@ class Solution:
         return slow
 ```
 
+## 142. Linked List Cycle II
+
+```
+Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+To represent a cycle in the given linked list, we use an integer pos which represents the position (0-indexed) in the linked list where tail connects to. If pos is -1, then there is no cycle in the linked list.
+
+Note: Do not modify the linked list.
+
+ 
+
+Example 1:
+
+Input: head = [3,2,0,-4], pos = 1
+Output: tail connects to node index 1
+Explanation: There is a cycle in the linked list, where tail connects to the second node.
+
+
+Example 2:
+
+Input: head = [1,2], pos = 0
+Output: tail connects to node index 0
+Explanation: There is a cycle in the linked list, where tail connects to the first node.
+
+
+Example 3:
+
+Input: head = [1], pos = -1
+Output: no cycle
+Explanation: There is no cycle in the linked list.
+
+
+ 
+
+Follow-up:
+Can you solve it without using extra space?
+```
+
+### Solution 1. HashSet
+
+```
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        #hash set
+        visited = set()
+        node = head
+        while node:
+            if node in visited:
+                return node
+            else:
+                visited.add(node)
+                node = node.next
+        return None
+```
+
+### Solution 2. Two Pointer
+
+* Floyd's algorithm Tortoise and Hare
+
+* Phase 1
+
+  * ![Diagram of cyclic list](LinkedList.assets/Slide1.PNG)
+  * fast: hare, slow: tortoise
+  * The cycle is labelled from $0$ to $C-1$, then $C$ is the length of the cycle.
+  * The noncyclic is labelled from $-F$ to $-1$, then F is the length of the noncyclic.
+  * After $F$ iterations, tortoise points to node 0 and hare points to some node $h$. $f\equiv h \ mod \ C$. Hare traverses $2F$, and exactly $F$ are in cycle.
+  * After $C-h$, tortoise points to node $C-h$, hare points to the same node, because it traverse $2(C-h)$ from $h$,
+  * $h+2(C-h) = 2C-h \equiv  C-h(mod\ C)$
+
+* Phase 2
+
+  * ![Phase 2 diagram](LinkedList.assets/diagram.png)
+
+  * $$
+    2*distance(tortoise) = distance(hare)\\
+    2(F+a)=F+a+b+a\\
+    2F+2a=F+2a+b\\
+    F=b
+    $$
+
+  * Then pointer start at node $h$ and $0$ will traverse the same number of nodes before meeting
+
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def get(self, head):
+        tortoise = head
+        hare = head
+        while hare and hare.next:
+            tortoise = tortoise.next
+            hare = hare.next.next
+            if tortoise == hare:
+                return hare
+        return None
+    
+    def detectCycle(self, head: ListNode) -> ListNode:
+        if not head:
+            return
+        start = self.get(head)
+        if not start:
+            return
+        
+        start_1 = head
+        start_2 = start
+        while start_1 != start_2:
+            start_1 = start_1.next
+            start_2 = start_2.next
+        return start_1
+        
+```
+

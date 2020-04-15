@@ -610,3 +610,29 @@ $$
 * Use a loop
 
 ## 
+
+
+
+## Other Algorithm
+
+### Floyd's algorithm Tortoise and Hare
+
+* Phase 1
+
+  * ![Diagram of cyclic list](README.assets/Slide1.PNG)
+  * fast: hare, slow: tortoise
+  * The cycle is labelled from $0$ to $C-1$, then $C$ is the length of the cycle.
+  * The noncyclic is labelled from $-F$ to $-1$, then F is the length of the noncyclic.
+  * After $F$ iterations, tortoise points to node 0 and hare points to some node $h$. $f\equiv h \ mod \ C$. Hare traverses $2F$, and exactly $F$ are in cycle.
+  * After $C-h$, tortoise points to node $C-h$, hare points to the same node, because it traverse $2(C-h)$ from $h$,
+  * $h+2(C-h) = 2C-h \equiv  C-h(mod\ C)$
+
+* Phase 2
+
+  * ![Phase 2 diagram](README.assets/diagram.png)
+
+  * $$
+    2*distance(tortoise) = distance(hare)\\2(F+a)=F+a+b+a\\2F+2a=F+2a+b\\F=b
+    $$
+
+  * Then pointer start at node $h$ and $0$ will traverse the same number of nodes before meeting
