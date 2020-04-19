@@ -690,3 +690,158 @@ class Solution:
 
 ```
 
+## 221. Maximal Square
+
+```
+Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
+
+Example:
+
+Input: 
+
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+
+Output: 4
+```
+
+### Solution 1. DP
+
+* $M*N$ DP, each store the max length of the matrix between the left top to the right bottom
+* $dp[i][j] = min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]) + 1$
+
+```python
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        if not matrix:
+            return 0
+        dp = [[int(matrix[i][j]) for j in range(len(matrix[0]))] for i in range(len(matrix))]
+        
+        ans = max(max(dp))
+        
+        for i in range(1, len(matrix)):
+            for j in range(1, len(matrix[0])):
+                if matrix[i][j] == '1':
+                    dp[i][j] = min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]) + 1
+                    ans = max(dp[i][j], ans)
+        return ans * ans 
+```
+
+### Solution 2. DP OnePass
+
+* ![ Max Square ](DynamicProgramming.assets/221_Maximal_Square1.png)
+* Only need to remember each row's dp.
+
+```python
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        if not matrix:
+            return 0
+        dp = [int(matrix[0][i]) for i in range(len(matrix[0]))]
+        
+        ans = max(dp)
+        prev = 0
+        
+        for i in range(1, len(matrix)):
+            prev = dp[0]
+            dp[0] = int(matrix[i][0])
+            ans = max(dp[0], ans)
+            for j in range(1, len(matrix[0])):
+                temp = dp[j]
+                if matrix[i][j] == '1':
+                    dp[j] = min(dp[j],dp[j-1],prev) + 1
+                    ans = max(dp[j], ans)
+                else:
+                    dp[j] = 0
+                prev = temp
+        return ans * ans 
+```
+
+* Better
+
+```python
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        if not matrix:
+            return 0
+        dp = [0 for i in range(len(matrix[0]) + 1)]
+        
+        ans = 0
+        prev = 0
+        
+        for i in range(1, len(matrix) + 1):
+            for j in range(1, len(matrix[0]) + 1):
+                temp = dp[j]
+                if matrix[i-1][j-1] == '1':
+                    dp[j] = min(dp[j],dp[j-1],prev) + 1
+                    ans = max(dp[j], ans)
+                else:
+                    dp[j] = 0
+                prev = temp
+        return ans * ans 
+```
+
+## 678. Valid Parenthesis String
+
+```
+Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. We define the validity of a string by these rules:
+
+Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+Any right parenthesis ')' must have a corresponding left parenthesis '('.
+Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+'*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string.
+An empty string is also valid.
+Example 1:
+Input: "()"
+Output: True
+Example 2:
+Input: "(*)"
+Output: True
+Example 3:
+Input: "(*))"
+Output: True
+Note:
+The string size will be in the range [1, 100].
+```
+
+### Solution 1. DP(Pending)
+
+* 
+
+### Solution 2. Greedy
+
+* Record the number of $($ .
+
+* $$
+  '(':[1]\\
+  '(*':[0,1,2]\\
+  '(**':[0,1,2,3]\\
+  '(***':[0,1,2,3,4]\\
+  '(***)':[0,1,2,3]\\
+  $$
+
+* So we keep the lowest and highest number that $'('$ could appear, then if the lowest number is equal to $0$ in the end. Then it's valid.
+
+```python
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+        low, high = 0, 0
+        for c in s:
+            if c == '(':
+                low += 1
+                high += 1
+            elif c == ')':
+                low -= 1
+                high -= 1
+            else:
+                low -= 1
+                high += 1
+            if high < 0:
+                break
+            low = max(0, low)
+        return low == 0
+
+```
+
