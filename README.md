@@ -635,4 +635,4 @@ $$
     2*distance(tortoise) = distance(hare)\\2(F+a)=F+a+b+a\\2F+2a=F+2a+b\\F=b
     $$
 
-  * Then pointer start at node $h$ and $0$ will traverse the same number of nodes before meeting
+  * Then pointer start at node $h$ and $0$ will traverse the same number of nodes before meeting
