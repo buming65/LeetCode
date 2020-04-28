@@ -443,3 +443,72 @@ Output: "2314"
 
 * Position $k$ is $(k-1)/(n-1)!+1$, because if k is divide by $(n-1)!$, then the value will be zero. Make it fit into $(0,N!-1)$ interval
 * Compute all factorial bases from $0$ to $(N-1)!$.
+
+## 78. Subsets
+
+```
+Given a set of distinct integers, nums, return all possible subsets (the power set).
+
+Note: The solution set must not contain duplicate subsets.
+
+Example:
+
+Input: nums = [1,2,3]
+Output:
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+```
+
+### Solution 1. Recursion
+
+```python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        ans = [[]]
+        
+        for num in nums:
+            ans += [curr + [num] for curr in ans]
+        return ans 
+```
+
+### Solution 2. Back Tracking
+
+![diff](BackTracking.assets/combinations.png)
+
+![diff](BackTracking.assets/backtracking.png)
+
+* We define a backtrack function named `backtrack(first, curr)` which takes the index of first element to add and a current combination as arguments.
+
+- If the current combination is done, we add the combination to the final output.
+- Otherwise, we iterate over the indexes `i` from `first` to the length of the entire sequence `n`.
+  - Add integer `nums[i]` into the current combination `curr`.
+  - Proceed to add more integers into the combination : `backtrack(i + 1, curr)`.
+  - Backtrack by removing `nums[i]` from `curr`.
+
+```python
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        def backtrack(first = 0, curr = []):
+            if len(curr) == self.k:
+                self.ans.append(curr[:])
+            
+            for j in range(first, len(nums)):
+                curr.append(nums[j])
+                backtrack(j+1, curr)
+                curr.pop()
+                
+        self.ans = []
+        for i in range(len(nums) + 1):
+            self.k = i
+            backtrack()
+        return self.ans
+```
+

@@ -288,3 +288,145 @@ class Solution:
         return ans
 ```
 
+## 105. Construct Binary Tree from Preorder and Inorder Traversal
+
+```
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+### Solution 1. Recursion
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+        if len(preorder) == 0:
+            return None
+        
+        root = TreeNode(preorder[0])
+        middle = inorder.index(preorder[0])
+        
+        root.left = self.buildTree(preorder[1:middle+1], inorder[:middle])
+        root.right = self.buildTree(preorder[middle+1:], inorder[middle+1:])
+
+        return root
+```
+
+* The time complexity will be $O(n^2)$
+
+### Solution 2. Recursion
+
+* Instead of using index which cause $O(n)$, we use $hashtable$ to make $O(1)$
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+            
+        if len(preorder) == 0:
+            return None
+        
+        index_map = collections.defaultdict(int)
+        
+        for idx, val in enumerate(inorder):
+            index_map[val] = idx
+            
+        def helper(l = 0, r = len(inorder)):
+            if l == r:
+                return None
+            
+            temp = preorder[self.pre]
+            root = TreeNode(temp)
+            
+            index = index_map[temp]
+            
+            self.pre += 1
+            
+            root.left = helper(l, index)
+            root.right = helper(index + 1, r)
+            
+            return root
+        
+        self.pre = 0
+        root = helper()
+        return root
+```
+
+## 102. Binary Tree Level Order Traversal
+
+```
+Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level).
+
+For example:
+Given binary tree [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its level order traversal as:
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+
+### Solution 1. Recursion
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def levelOrder(self, root: TreeNode) -> List[List[int]]:
+        ans = []
+        if not root:
+            return ans
+        
+        def helper(node, level):
+            if len(ans) == level:
+                ans.append([])
+            
+            ans[level].append(node.val)
+            
+            if node.left:
+                helper(node.left, level+1)
+            if node.right:
+                helper(node.right, level+1)
+        
+        helper(root, 0)
+        return ans
+```
+
