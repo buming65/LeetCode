@@ -884,3 +884,140 @@ class Solution:
         return ans 
 ```
 
+## 96. Unique Binary Search Trees
+
+```
+Given n, how many structurally unique BST's (binary search trees) that store values 1 ... n?
+
+Example:
+
+Input: 3
+Output: 5
+Explanation:
+Given n = 3, there are a total of 5 unique BST's:
+
+   1         3     3      2      1
+    \       /     /      / \      \
+     3     2     1      1   3      2
+    /     /       \                 \
+   2     1         2                 3
+```
+
+### Solution 1. DP
+
+* Given a sequence $1...n$, enumerate each number $i$ in the sequence, use this number as root. So $1...(i-1)$  on the left, $(i+1)...n$ on the right.
+* $G(n):$ the number of unique BST for a sequence of length $n$.
+* $F(i,n):$ the number of unique BST, where the number $i$ is served as the root of BST$(1\le i \le n)$.
+* $G(n) = \sum_{i=1}^{n}F(i,n)\ \ \ \ \ \ (1)$
+* $G(0) = 1, G(1)=1$
+
+![image-20200426223824924](DynamicProgramming.assets/image-20200426223824924.png)
+
+* The number of $F(i,n)$ is the **cartesian product** of the number of BST in the left and right.
+* $F(i,n) = G(i-1)\cdot G(n-i)\ \ \ \ \ \ (2)$
+
+* Combine (1) and (2), we can get$G(n) = \sum_{i=1}^{n}G(i-1)\cdot G(n-i)$
+
+```python
+class Solution:
+    def numTrees(self, n: int) -> int:
+        G = [0] * (n+1)
+        G[0], G[1] = 1, 1
+        
+        for i in range(2, n+1):
+            for j in range(1, i+1):
+                G[i] += G[j-1]*G[i-j]
+        return G[n]
+```
+
+### Mathematical Deduction(Pending)
+
+* Use Catalan Number.
+
+## 62. Unique Paths
+
+```
+A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+
+The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+How many possible unique paths are there?
+
+
+Above is a 7 x 3 grid. How many possible unique paths are there?
+
+ 
+
+Example 1:
+
+Input: m = 3, n = 2
+Output: 3
+Explanation:
+From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+1. Right -> Right -> Down
+2. Right -> Down -> Right
+3. Down -> Right -> Right
+Example 2:
+
+Input: m = 7, n = 3
+Output: 28
+ 
+
+Constraints:
+
+1 <= m, n <= 100
+It's guaranteed that the answer will be less than or equal to 2 * 10 ^ 9.
+```
+
+### Solution 1. DP
+
+```python
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        dp = [[1 for i in range(n)] for j in range(m)]
+        
+        for i in range(1,m):
+            for j in range(1,n):
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        return dp[m-1][n-1]
+```
+
+## 279. Perfect Squares
+
+```
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+Example 1:
+
+Input: n = 12
+Output: 3 
+Explanation: 12 = 4 + 4 + 4.
+Example 2:
+
+Input: n = 13
+Output: 2
+Explanation: 13 = 4 + 9.
+```
+
+### Solution 1. DP
+
+* Calculate the square number, $dp[i]$ means the min number to reach the number 
+* For each value in range 1 to n, $dp[i] = min(dp[i], dp[i-s]+1)$
+
+```python
+class Solution:
+    def numSquares(self, n: int) -> int:
+        square = [i ** 2 for i in range(0, int(math.sqrt(n))+1)]
+        dp = [float("inf") for i in range(n+1)]
+        
+        dp[0] = 0
+        
+        for i in range(1, n+1):
+            for s in square:
+                if i < s:
+                    break
+                dp[i] = min(dp[i], dp[i-s]+1)
+        return dp[-1]
+```
+
+### Solution 2. Greedy (Pending)
