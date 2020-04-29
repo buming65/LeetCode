@@ -520,6 +520,7 @@ $$
 * DAG: Directed Acyclic Graph
 * A topological sort is a linear ordering of all its vertices such that if $G$ contains an edge $(u,v)$, then $u$ appears before $v$ in the ordering. 
 * If the graph contains a cycle, then no linear ordering is possible. And there could be more than one topological sorting for a graph. 
+* Can be used to whether the graph is DAG or not
 
 #### DFS Algorithm
 
@@ -643,7 +644,11 @@ $$
 
 
 
+### Dutch national flag problem
 
+* The flag consists of three colors: red, white and blue. Given balls of these three colors arranged randomly in line. The task is to arrange them such that all balls of the same color are together.
+* The solution is of interest for designing sorting algorithms.
+* Use three point to store the rightmost of the first color, current index, leftmost of the third color.
 
 ## Bit Manipulation
 
