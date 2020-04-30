@@ -302,6 +302,107 @@ class Solution:
         return cur
 ```
 
+## 337. House Robber III
+
+```
+The thief has found himself a new place for his thievery again. There is only one entrance to this area, called the "root." Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that "all houses in this place forms a binary tree". It will automatically contact the police if two directly-linked houses were broken into on the same night.
+
+Determine the maximum amount of money the thief can rob tonight without alerting the police.
+
+Example 1:
+
+Input: [3,2,3,null,3,null,1]
+
+     3
+    / \
+   2   3
+    \   \ 
+     3   1
+
+Output: 7 
+Explanation: Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
+Example 2:
+
+Input: [3,4,5,1,3,null,1]
+
+     3
+    / \
+   4   5
+  / \   \ 
+ 1   3   1
+
+Output: 9
+Explanation: Maximum amount of money the thief can rob = 4 + 5 = 9.
+```
+
+### Solution 1. DP
+
+* Each subtree could be seen as a line in the House Robber I problem.
+* So for each node, get `prev_left, curr_left` which means max of prev of the preve node, max of prev node. To be short, 1 node ahead and 2 node ahead.
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def rob(self, root: TreeNode) -> int:
+        
+        def dfs(node):
+            if not node:
+                return 0, 0
+            prev_left, curr_left = dfs(node.left)
+            prev_right, curr_right = dfs(node.right)
+            
+            return curr_left + curr_right, max(curr_left + curr_right, node.val + prev_left + prev_right)
+        
+        return max(dfs(root))
+```
+
+## 213. House Robber II
+
+```
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have security system connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+
+Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
+
+Example 1:
+
+Input: [2,3,2]
+Output: 3
+Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2),
+             because they are adjacent houses.
+Example 2:
+
+Input: [1,2,3,1]
+Output: 4
+Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+             Total amount you can rob = 1 + 3 = 4.
+```
+
+### Solution 1. DP
+
+* Here we need be notice that first and last are adjacent. So, we need to run the algorithm on both `nums[1:]` and `nums[:-1]`.
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+        if len(nums) == 1:
+            return nums[0]
+        def helper(nums):
+            prev, curr = 0, 0
+            for num in nums:
+                prev, curr = curr, max(prev + num, curr)
+            return curr
+        
+        return max(helper(nums[1:]),helper(nums[:-1]))
+```
+
 ## 1027. Longest Arithmetic Sequence
 
 ```
@@ -616,7 +717,7 @@ class Solution:
     
 ```
 
-## 309. Best Time to Buy and Sell Stock with Cooldown
+## 309. Best Time to Buy and Sell Stock with Cooldown(PENDING)
 
 ```
 Say you have an array for which the ith element is the price of a given stock on day i.
@@ -640,7 +741,7 @@ Explanation: transactions = [buy, sell, cooldown, buy, sell]
 
 ```
 
-## 300. Longest Increasing Subsequence
+## 300. Longest Increasing Subsequence(PENDING)
 
 ```
 Given an unsorted array of integers, find the length of longest increasing subsequence.
@@ -783,7 +884,7 @@ class Solution:
         return ans * ans 
 ```
 
-## 678. Valid Parenthesis String
+## 678. Valid Parenthesis String(PENDING)
 
 ```
 Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. We define the validity of a string by these rules:
@@ -884,7 +985,7 @@ class Solution:
         return ans 
 ```
 
-## 96. Unique Binary Search Trees
+## 96. Unique Binary Search Trees(Pending)
 
 ```
 Given n, how many structurally unique BST's (binary search trees) that store values 1 ... n?
@@ -982,7 +1083,7 @@ class Solution:
         return dp[m-1][n-1]
 ```
 
-## 279. Perfect Squares
+## 279. Perfect Squares(Pending)
 
 ```
 Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
@@ -1021,3 +1122,59 @@ class Solution:
 ```
 
 ### Solution 2. Greedy (Pending)
+
+
+
+## 152. Maximum Product Subarray
+
+```
+Given an integer array nums, find the contiguous subarray within an array (containing at least one number) which has the largest product.
+
+Example 1:
+
+Input: [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+Example 2:
+
+Input: [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+```
+
+### Solution 1. DP
+
+* Need `min_dp` and `max_dp`. When meet a minus number, min_dp multiple minus number become biggest number.
+
+```python
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        max_dp = [0] * len(nums)
+        min_dp = [0] * len(nums)
+        max_dp[0], min_dp[0] = nums[0], nums[0]
+        
+        for i in range(1, len(nums)):
+            max_dp[i] = max(max_dp[i-1] * nums[i], min_dp[i-1] * nums[i], nums[i])
+            min_dp[i] = min(max_dp[i-1] * nums[i], min_dp[i-1] * nums[i], nums[i])
+            
+        return max(max_dp)
+```
+
+### Solution 2. DP with O(1) Space
+
+```python
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        if not nums:
+            return
+        prev_min = prev_max = ans = nums[0]
+        
+        for i in range(1, len(nums)):
+            temp = prev_min
+            prev_min = min(prev_max * nums[i], temp * nums[i], nums[i])
+            prev_max = max(prev_max * nums[i], temp * nums[i], nums[i])
+            ans = max(ans, prev_max)
+        
+        return ans
+```
+

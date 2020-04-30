@@ -498,3 +498,63 @@ class Solution:
         return self.max_sum
 ```
 
+## 114. Flatten Binary Tree to Linked List
+
+```
+Given a binary tree, flatten it to a linked list in-place.
+
+For example, given the following tree:
+
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+The flattened tree should look like:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+```
+
+### Solution 1. Recursion
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def flatten(self, root: TreeNode) -> None:
+        """
+        Do not return anything, modify root in-place instead.
+        """
+        def dfs(node):
+            if not node:
+                return 
+            
+            if not node.left and not node.right:
+                return node
+            
+            leftSub = dfs(node.left)
+            rightSub = dfs(node.right)
+            
+            if leftSub:
+                leftSub.right = node.right
+                node.right = node.left
+                node.left = None
+            return rightSub if rightSub else leftSub
+        
+        return dfs(root)
+```
+
