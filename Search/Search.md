@@ -41,3 +41,60 @@ class Solution:
                   for c in range(len(grid[0])))
 ```
 
+## 694. Number of Distinct Islands
+
+```
+Given a non-empty 2D array grid of 0's and 1's, an island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+
+Count the number of distinct islands. An island is considered to be the same as another if and only if one island can be translated (and not rotated or reflected) to equal the other.
+
+Example 1:
+11000
+11000
+00011
+00011
+Given the above grid map, return 1.
+Example 2:
+11011
+10000
+00001
+11011
+Given the above grid map, return 3.
+
+Notice that:
+11
+1
+and
+ 1
+11
+are considered different island shapes, because we do not consider reflection / rotation.
+Note: The length of each dimension in the given grid does not exceed 50.
+```
+
+### Solution 1. Coordinates
+
+```python
+class Solution:
+    def numDistinctIslands(self, grid: List[List[int]]) -> int:
+        islands = set()
+        queue = []
+        
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == 1:
+                    queue.append((i,j))
+                    shape = []
+                    
+                    while queue:
+                        r, c = queue.pop(0)
+                        for nr, nc in (r+1, c), (r-1,c), (r,c+1), (r,c-1):
+                            if 0 <= nr < len(grid) and 0 <= nc < len(grid[0]) and grid[nr][nc] == 1:
+                                grid[nr][nc] = 0
+                                queue.append((nr,nc))
+                                shape.append((nr-i, nc-j))
+                    
+                    islands.add(tuple(shape))
+        
+        return len(islands)
+```
+
