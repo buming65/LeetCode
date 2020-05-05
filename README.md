@@ -656,5 +656,7 @@ $$
 * OR `|`  Return `1` if either of the bit is `1` else `0`
 * NOT `~`. return one's complement of the number. `-x-1`  `a=10=1010`, `~a = ~1010 = -(1010+1)=-(1011)=-11`
 * XOR `^` Return `1` if one of the bit is `1` and other is `0` else false
+  * XOR of `zero and a bit` results in that bit
+  * XOR of `one and a bit ` flips that bit
 * Right Shift `>>` fill `0` on the left
 * Left Shift  `<<` fill `0` on the right

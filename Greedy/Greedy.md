@@ -431,3 +431,285 @@ class Solution:
         return ans
 ```
 
+## 316. Remove Duplicate Letters
+
+```
+Given a string which contains only lowercase letters, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
+
+Example 1:
+
+Input: "bcabc"
+Output: "abc"
+Example 2:
+
+Input: "cbacdcbc"
+Output: "acdb"
+Note: This question is the same as 1081: https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
+```
+
+### Solution 1. Greedy + Stack
+
+* The character is greater than the current characters
+* The character can be removed because it occurs later on
+
+```python
+class Solution:
+    def removeDuplicateLetters(self, s: str) -> str:
+        stack = []
+        last = {value:index for index, value in enumerate(s)}
+        
+        for index, value in enumerate(s):
+            if value not in stack:
+                while stack and value < stack[-1] and index < last[stack[-1]]:
+                    stack.pop()
+                stack.append(value)
+        return "".join(stack)
+```
+
+## 45. Jump Game II
+
+```
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position.
+
+Your goal is to reach the last index in the minimum number of jumps.
+
+Example:
+
+Input: [2,3,1,1,4]
+Output: 2
+Explanation: The minimum number of jumps to reach the last index is 2.
+    Jump 1 step from index 0 to 1, then 3 steps to the last index.
+Note:
+
+You can assume that you can always reach the last index.
+```
+
+### Solution 1. Greedy
+
+- Initiate the maximum position that one could reach starting from the current index `i` or before: `max_pos = nums[0]`.
+- Initiate the maximum position reachable *during* the current jump: `max_steps = nums[0]`.
+- Initiate number of steps: at least one, if array has more than 1 cell.
+- Iterate over number of elements in the input array:
+  - If `max_step < i`, one needs one more jump: `jumps += 1`. To minimize the number of jumps, choose the longest possible one: `max_steps = max_pos`.
+  - Update `max_pos = max(max_pos, i + nums[i])`.
+- Return the number of jumps.
+
+```python
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        if len(nums) < 2:
+            return 0
+        
+        max_pos, max_steps = nums[0], nums[0]
+        
+        jumps = 1
+        for i in range(1, len(nums)):
+            if max_steps < i:
+                jumps += 1
+                max_steps = max_pos
+            max_pos = max(max_pos, nums[i] + i)
+            
+        return jumps
+```
+
+## 134. Gas Station
+
+```
+There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
+
+You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). You begin the journey with an empty tank at one of the gas stations.
+
+Return the starting gas station's index if you can travel around the circuit once in the clockwise direction, otherwise return -1.
+
+Note:
+
+If there exists a solution, it is guaranteed to be unique.
+Both input arrays are non-empty and have the same length.
+Each element in the input arrays is a non-negative integer.
+Example 1:
+
+Input: 
+gas  = [1,2,3,4,5]
+cost = [3,4,5,1,2]
+
+Output: 3
+
+Explanation:
+Start at station 3 (index 3) and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+Travel to station 4. Your tank = 4 - 1 + 5 = 8
+Travel to station 0. Your tank = 8 - 2 + 1 = 7
+Travel to station 1. Your tank = 7 - 3 + 2 = 6
+Travel to station 2. Your tank = 6 - 4 + 3 = 5
+Travel to station 3. The cost is 5. Your gas is just enough to travel back to station 3.
+Therefore, return 3 as the starting index.
+Example 2:
+
+Input: 
+gas  = [2,3,4]
+cost = [3,4,3]
+
+Output: -1
+
+Explanation:
+You can't start at station 0 or 1, as there is not enough gas to travel to the next station.
+Let's start at station 2 and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+Travel to station 0. Your tank = 4 - 3 + 2 = 3
+Travel to station 1. Your tank = 3 - 3 + 3 = 3
+You cannot travel back to station 2, as it requires 4 unit of gas but you only have 3.
+Therefore, you can't travel around the circuit once no matter where you start.
+```
+
+### Solution 1. Greedy
+
+**Algorithm**
+
+Now the algorithm is straightforward :
+
+1. Initiate `total_tank` and `curr_tank` as zero, and choose station `0` as a starting station.
+2. Iterate over all stations :
+   - Update `total_tank` and `curr_tank` at each step, by adding `gas[i]` and subtracting `cost[i]`.
+   - If `curr_tank < 0` at `i + 1` station, make `i + 1` station a new starting point and reset `curr_tank = 0` to start with an empty tank.
+3. Return `-1` if `total_tank < 0` and `starting station` otherwise.
+
+* Notice the problem indicate that `if there exists a solution, it's guaranteed to be unique.` So generally, if we find the station that with the negative `curr_tank`, we need to search the loop to ensure it could reach the prev station. But with unique solution, there's no necessary to loop again.
+
+> How one could ensure that it's possible to loop around to $$N_s$$ ?
+
+Let's use here the [proof by contradiction](https://en.wikipedia.org/wiki/Proof_by_contradiction) and assume that there is a station 0 < k < N_s0<*k*<*N**s* such that one couldn't reach this station starting from N_s*N**s*.
+
+The condition `total_tank >= 0` could be written as
+
+$$\sum_{i = 0}^{i = N}{\alpha_i} \ge 0 \qquad (1)$$ where $$\alpha_i = \textrm{gas[i]} - \textrm{cost[i]}$$
+
+Let's split the sum on the right side by the starting station $$N_s$$ and unreachable station `k` :
+
+$$\sum_{i = 0}^{i = k}{\alpha_i} + \sum_{i = k + 1}^{i = N_s - 1}{\alpha_i} + \sum_{i = N_s}^{i = N}{\alpha_i} \ge 0 \qquad (2)$$
+
+The second term is negative by the algorithm definition - otherwise the starting station would be before $$N_s$$. It could be equal to zero only in the case of $$k = N_s - 1$$.
+
+$$\sum_{i = k + 1}^{i = N_s - 1}{\alpha_i} \le 0 \qquad (3)$$
+
+Equations `(2)` and `(3)` together results in
+
+$$\sum_{i = 0}^{i = k}{\alpha_i} + \sum_{i = N_s}^{i = N}{\alpha_i} \ge 0 \qquad (4)$$
+
+At the same time the station k*k* is supposed to be unreachable from $$N_s$$that means
+
+$$\sum_{i = N_s}^{i = N}{\alpha_i} + \sum_{i = 0}^{i = k}{\alpha_i} < 0 \qquad (5)$$
+
+Eqs. `(4)` and `(5)` together result in a contradiction. Therefore, the initial assumption — that there is a station $$0 < k < N_s$$such that one couldn't reach this station starting from $$N_s$$ — must be false.
+
+Hence, one could do a round trip starting from$$ N_s$$, that makes $$N_s$$ to be an answer. The answer is unique according to the problem definition.
+
+```python
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        total, curr = 0, 0
+        start_pos = 0
+        for i in range(len(gas)):
+            total += gas[i] - cost[i]
+            curr += gas[i] - cost[i]
+            if curr < 0:
+                start_pos = i + 1
+                curr = 0
+        return start_pos if total >= 0 else -1
+```
+
+## 763. Partition Labels
+
+```
+A string S of lowercase letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.
+
+Example 1:
+Input: S = "ababcbacadefegdehijhklij"
+Output: [9,7,8]
+Explanation:
+The partition is "ababcbaca", "defegde", "hijhklij".
+This is a partition so that each letter appears in at most one part.
+A partition like "ababcbacadefegde", "hijhklij" is incorrect, because it splits S into less parts.
+Note:
+
+S will have length in range [1, 500].
+S will consist of lowercase letters ('a' to 'z') only.
+```
+
+### Solution 1. Greedy
+
+* Check the interval, to search the max interval.
+* We need an array `last[char] -> index of S where char occurs last`. Then, let `anchor` and `j` be the start and end of the current partition. If we are at a label that occurs last at some index after `j`, we'll extend the partition `j = last[c]`. If we are at the end of the partition (`i == j`) then we'll append a partition size to our answer, and set the start of our new partition to `i+1`.
+
+```python 
+class Solution:
+    def partitionLabels(self, S: str) -> List[int]:
+        last = {value: index for index, value in enumerate(S)}
+        max_index, pivot = 0, 0
+        ans = []
+        
+        for index, value in enumerate(S):
+            max_index = max(max_index, last[value])
+            if index == max_index:
+                ans.append(max_index - pivot + 1)
+                pivot = max_index + 1
+        
+        return ans 
+```
+
+## 135. Candy
+
+```
+There are N children standing in a line. Each child is assigned a rating value.
+
+You are giving candies to these children subjected to the following requirements:
+
+Each child must have at least one candy.
+Children with a higher rating get more candies than their neighbors.
+What is the minimum candies you must give?
+
+Example 1:
+
+Input: [1,0,2]
+Output: 5
+Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+Example 2:
+
+Input: [1,2,2]
+Output: 4
+Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively.
+             The third child gets 1 candy because it satisfies the above two conditions.
+```
+
+### Solution 1. Two Arrays (One Array) 
+
+* In this approach, we make use of two 1-d arrays $$left2right$$ and $$right2left$$. The $$left2right$$ array is used to store the number of candies required by the current student taking care of the distribution relative to the left neighbours only. i.e. Assuming the distribution rule is: The student with a higher ratings than its left neighbour should always get more candies than its left neighbour. Similarly, the $$right2left$$ array is used to store the number of candies candies required by the current student taking care of the distribution relative to the right neighbours only. i.e. Assuming the distribution rule to be: The student with a higher ratings than its right neighbour should always get more candies than its right neighbour. To do so, firstly we assign 1 candy to each student in both $$left2right$$ and $$right2left$$ array. Then, we traverse the array from left-to-right and whenever the current element's ratings is larger than the left neighbour we update the current element's candies in the $$left2right$$ array as $$left2right[i] = left2right[i-1] + 1$$, since the current element's candies are always less than or equal candies than its left neighbour before updation. After the forward traversal, we traverse the array from left-to-right and update $$right2left[i]$$ as $$right2left[i] = right2left[i + 1] + 1$$, whenever the current ( $$i^{th}$$ ) element has a higher ratings than the right ( $$(i+1)^{th}$$ element.
+
+  Now, for the $$i^{th}$$ student in the array, we need to give $$\text{max}(left2right[i], right2left[i])$$ to it, in order to satisfy both the left and the right neighbour relationship. Thus, at the end, we obtain the minimum number of candies required as:
+
+  $$\text{minimum_candies}=\sum_{i=0}^{n-1} \text{max}(left2right[i], right2left[i]), \text{where } n = \text{length of the ratings array.}$$
+
+```python
+class Solution:
+    def candy(self, ratings: List[int]) -> int:
+        left2right = [1] * len(ratings)
+        right2left = [1] * len(ratings)
+        for i in range(1, len(ratings)):
+            if ratings[i] > ratings[i-1]:
+                left2right[i] = left2right[i-1] + 1
+        
+        for i in range(len(ratings)-1, 0, -1):
+            if ratings[i-1] > ratings[i]:
+                right2left[i-1] = right2left[i] + 1
+        
+        ans = [0] * len(ratings)
+        
+        for i in range(len(ratings)):
+            ans[i] = max(left2right[i], right2left[i])
+            
+        return sum(ans)
+
+```
+
+### Solution 2. Single Pass(Pending)
+
+* 
