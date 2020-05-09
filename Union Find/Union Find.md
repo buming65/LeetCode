@@ -150,3 +150,210 @@ class Solution:
         return res
 ```
 
+## 684. Redundant Connection\684. Redundant Connection
+
+```
+In this problem, a tree is an undirected graph that is connected and has no cycles.
+
+The given input is a graph that started as a tree with N nodes (with distinct values 1, 2, ..., N), with one additional edge added. The added edge has two different vertices chosen from 1 to N, and was not an edge that already existed.
+
+The resulting graph is given as a 2D-array of edges. Each element of edges is a pair [u, v] with u < v, that represents an undirected edge connecting nodes u and v.
+
+Return an edge that can be removed so that the resulting graph is a tree of N nodes. If there are multiple answers, return the answer that occurs last in the given 2D-array. The answer edge [u, v] should be in the same format, with u < v.
+
+Example 1:
+Input: [[1,2], [1,3], [2,3]]
+Output: [2,3]
+Explanation: The given undirected graph will be like this:
+  1
+ / \
+2 - 3
+Example 2:
+Input: [[1,2], [2,3], [3,4], [1,4], [1,5]]
+Output: [1,4]
+Explanation: The given undirected graph will be like this:
+5 - 1 - 2
+    |   |
+    4 - 3
+Note:
+The size of the input 2D-array will be between 3 and 1000.
+Every integer represented in the 2D-array will be between 1 and N, where N is the size of the input array.
+
+Update (2017-09-26):
+We have overhauled the problem description + test cases and specified clearly the graph is an undirected graph. For the directed graph follow up please see Redundant Connection II). We apologize for any inconvenience caused.
+```
+
+### Solution 1. DFS
+
+```python
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        graph = collections.defaultdict(set)
+        
+        def dfs(source, target):
+            if source not in seen:
+                seen.add(source)
+                if source == target:
+                    return True
+                for neigh in graph[source]:
+                    if dfs(neigh, target):
+                        return True
+        
+        for u, v in edges:
+            seen = set()
+            if u in graph and v in graph and dfs(u, v):
+                return u, v
+            
+            graph[u].add(v)
+            graph[v].add(u)
+```
+
+### Solution 2. Union Find
+
+```python
+class Solution:
+    def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
+        parent = [i for i in range(1001)]
+        
+        def find(x):
+            if parent[x] != x:
+                return find(parent[x])
+            return parent[x]
+        
+        def union(x, y):
+            xroot, yroot = find(x), find(y)
+            if xroot == yroot:
+                return [u, v]
+            parent[xroot] = yroot
+        
+        for u, v in edges:
+            if union(u, v):
+                return [u, v]
+        
+        return []
+```
+
+## 128. Longest Consecutive Sequence
+
+```
+Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+
+Your algorithm should run in O(n) complexity.
+
+Example:
+
+Input: [100, 4, 200, 1, 3, 2]
+Output: 4
+Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+```
+
+### Solution 1. Hashset
+
+* The difficult is to minimum the time consuming, with hashset, find operation is $O(1)$. 
+
+```python
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        ans = 0
+        num_set = set(nums)
+        
+        for num in num_set:
+            if num - 1 not in num_set:
+                current = num
+                temp = 1
+                while current + 1 in num_set:
+                    current += 1
+                    temp += 1
+                
+                ans = max(ans, temp)
+                    
+        return ans
+```
+
+### Solution 2. Union Find
+
+```python
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        def find(x):
+            if parent[x] != x:
+                return find(parent[x])
+            return parent[x]
+        
+        def union(x, y):
+            xroot, yroot = find(x), find(y)
+            if xroot == yroot:
+                return
+            parent[xroot] = yroot
+            rank[yroot] += 1
+        
+        nums = sorted(set(nums))
+        parent = {}
+        rank = {}
+        for num in nums:
+            parent[num] = num
+            rank[num] = 1
+            if num - 1 in parent:
+                union(num, num - 1)
+        
+        return max(rank.values()) if rank else 0
+```
+
+## 399. Evaluate Division
+
+```
+Equations are given in the format A / B = k, where A and B are variables represented as strings, and k is a real number (floating point number). Given some queries, return the answers. If the answer does not exist, return -1.0.
+
+Example:
+Given a / b = 2.0, b / c = 3.0.
+queries are: a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? .
+return [6.0, 0.5, -1.0, 1.0, -1.0 ].
+
+The input is: vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries , where equations.size() == values.size(), and the values are positive. This represents the equations. Return vector<double>.
+
+According to the example above:
+
+equations = [ ["a", "b"], ["b", "c"] ],
+values = [2.0, 3.0],
+queries = [ ["a", "c"], ["b", "a"], ["a", "e"], ["a", "a"], ["x", "x"] ]. 
+ 
+
+The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.
+```
+
+### Solution 1. DFS
+
+```python
+class Solution:
+    def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
+        tables = collections.defaultdict(dict)
+        
+        def dfs(x, y, tables, visited):
+            if x == y:
+                return 1.0
+            visited.add(x)
+            for neigh in tables[x]:
+                if neigh in visited:
+                    continue
+                visited.add(neigh)
+                d = dfs(neigh, y, tables, visited)
+                if d > 0:
+                    return d * tables[x][neigh]
+            return -1.0
+        
+        ans = []
+        for (x, y), value in zip(equations, values):
+            tables[x][y] = value
+            tables[y][x] = 1.0 / value
+        
+        for x, y in queries:
+            temp = -1.0
+            if x in tables and y in tables:
+                temp = dfs(x, y, tables, set())
+            ans.append(temp)
+        
+        return ans 
+```
+
+### Solution 2. Union Find(PENDING)
+
