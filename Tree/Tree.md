@@ -1,5 +1,23 @@
 # Tree
 
+## Traverse
+
+### Pre-order Traversal
+
+Root, Left, Right
+
+### In-order Traversal
+
+Left, Root, Right
+
+### Post-order Traversal
+
+Left, Right, Root
+
+### Recursive or Iterative
+
+Use stack to solve the BST traverse problem.
+
 ## 104. Maximum Depth of Binary Tree
 
 ```
@@ -222,6 +240,53 @@ class Solution:
         return self.ans
 ```
 
+## 144. Binary Tree Preorder Traversal
+
+```
+Given a binary tree, return the preorder traversal of its nodes' values.
+
+Example:
+
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [1,2,3]
+Follow up: Recursive solution is trivial, could you do it iteratively?
+```
+
+### Solution 1. Iterative
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def preorderTraversal(self, root: TreeNode) -> List[int]:
+        if not root:
+            return
+        ans = []
+        stack = [root]
+        
+        while stack:
+            root = stack.pop()
+            if root:
+                ans.append(root.val)
+                if root.right:
+                    stack.append(root.right)
+                if root.left:
+                    stack.append(root.left)
+        return ans
+```
+
+
+
 ## 94. Binary Tree Inorder Traversal
 
 ```
@@ -286,6 +351,46 @@ class Solution:
             ans.append(curr.val)
             curr = curr.right
         return ans
+```
+
+## 145. Binary Tree Postorder Traversal
+
+```
+Given a binary tree, return the postorder traversal of its nodes' values.
+
+Example:
+
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [3,2,1]
+Follow up: Recursive solution is trivial, could you do it iteratively?
+```
+
+### Solution 1. Iterative
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def postorderTraversal(self, root: TreeNode) -> List[int]:
+        res, stack = [], [root]
+        while stack:
+            node = stack.pop()
+            if node:
+                res.append(node.val)
+                stack.append(node.left)
+                stack.append(node.right)
+        return res[::-1]
+                
 ```
 
 ## 105. Construct Binary Tree from Preorder and Inorder Traversal
@@ -378,6 +483,62 @@ class Solution:
         root = helper()
         return root
 ```
+
+## 106. Construct Binary Tree from Inorder and Postorder Traversal
+
+```
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+### Solution 1. Recursive
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
+        index_map = collections.defaultdict(int)
+        for idx, val in enumerate(inorder):
+            index_map[val] = idx
+        
+        def helper(l, r):
+            if l > r or not postorder:
+                return
+            
+            val = postorder.pop()
+            root = TreeNode(val)
+            
+            index = index_map[val]
+            
+            root.right = helper(index + 1, r)
+            root.left = helper(l, index - 1)
+            
+            
+            return root
+        
+        return helper(0, len(inorder) - 1)
+```
+
+
 
 ## 102. Binary Tree Level Order Traversal
 
@@ -635,5 +796,357 @@ class BSTIterator:
 # obj = BSTIterator(root)
 # param_1 = obj.next()
 # param_2 = obj.hasNext()
+```
+
+## 250. Count Univalue Subtrees
+
+```
+Given a binary tree, count the number of uni-value subtrees.
+
+A Uni-value subtree means all nodes of the subtree have the same value.
+
+Example :
+
+Input:  root = [5,1,5,5,5,null,5]
+
+              5
+             / \
+            1   5
+           / \   \
+          5   5   5
+
+Output: 4
+```
+
+### Solution 1. DFS
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def countUnivalSubtrees(self, root: TreeNode) -> int:
+        self.ans = 0
+        self.dfs(root)
+        return self.ans
+    
+    def dfs(self, root):
+        if not root:
+            return True
+        
+        left, right = self.dfs(root.left), self.dfs(root.right)
+        
+        if left and right and (not root.left or root.left.val == root.val) and \
+    (not root.right or root.right.val == root.val):
+            self.ans += 1
+            return True
+        return False
+
+```
+
+## 101. Symmetric Tree
+
+```
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree [1,2,2,3,4,4,3] is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+ 
+
+But the following [1,2,2,null,3,null,3] is not:
+
+    1
+   / \
+  2   2
+   \   \
+   3    3
+ 
+
+Follow up: Solve it both recursively and iteratively.
+```
+
+### Solution 1. Recursively
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        def check(L, R):
+            if not L and not R:
+                return True
+            if L and R and L.val == R.val:
+                return check(L.left, R.right) and check(L.right, R.left)
+            return False
+        
+        if not root:
+            return True
+        return check(root.left, root.right)
+    
+```
+
+### Solution 2. Iteratively
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        queue = collections.deque([root, root])
+        
+        while queue:
+            t1 = queue.popleft()
+            t2 = queue.popleft()
+            
+            if not t1 and not t2:
+                continue
+            
+            if not t1 or not t2:
+                return False
+            
+            if t1.val != t2.val:
+                return False
+            
+            queue.append(t1.left)
+            queue.append(t2.right)
+            queue.append(t1.right)
+            queue.append(t2.left)
+        return True
+    
+```
+
+## 112. Path Sum
+
+```
+Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+
+Note: A leaf is a node with no children.
+
+Example:
+
+Given the below binary tree and sum = 22,
+
+      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \      \
+7    2      1
+return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
+```
+
+### Solution 1. Iterative
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def hasPathSum(self, root: TreeNode, sum: int) -> bool:
+        if not root:
+            return False
+        
+        queue = [(root, sum - root.val)]
+        while queue:
+            node, curr = queue.pop()
+            if not node.left and not node.right and curr == 0:
+                return True
+            if node.right:
+                queue.append((node.right, curr-node.right.val))
+            
+            if node.left:
+                queue.append((node.left, curr - node.left.val))
+        
+        return False
+```
+
+## 236. Lowest Common Ancestor of a Binary Tree
+
+```
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
+
+Given the following binary tree:  root = [3,5,1,6,2,0,8,null,null,7,4]
+
+
+ 
+
+Example 1:
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+Output: 3
+Explanation: The LCA of nodes 5 and 1 is 3.
+Example 2:
+
+Input: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+Output: 5
+Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of itself according to the LCA definition.
+ 
+
+Note:
+
+All of the nodes' values will be unique.
+p and q are different and both values will exist in the binary tree.
+```
+
+### Solution 1. Recursive
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        self.result = None
+        def dfs(node):
+            if not node:
+                return False
+            left = dfs(node.left)
+            right = dfs(node.right)
+            
+            temp = False
+            if node == p or node == q:
+                temp = True
+            
+            if left + temp + right >= 2:
+                self.result = node
+            
+            return temp or left or right
+        
+        dfs(root)
+        return self.result
+```
+
+## 116. Populating Next Right Pointers in Each Node(PENDING)
+
+![img](Tree.assets/116_sample.png)
+
+```
+You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition:
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+
+ 
+
+Follow up:
+
+You may only use constant extra space.
+Recursive approach is fine, you may assume implicit stack space does not count as extra space for this problem.
+ 
+
+Example 1:
+
+
+
+Input: root = [1,2,3,4,5,6,7]
+Output: [1,#,2,3,#,4,5,6,7,#]
+Explanation: Given the above perfect binary tree (Figure A), your function should populate each next pointer to point to its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, with '#' signifying the end of each level.
+ 
+
+Constraints:
+
+The number of nodes in the given tree is less than 4096.
+-1000 <= node.val <= 1000
+```
+
+
+
+## 117. Populating Next Right Pointers in Each Node II
+
+![img](Tree.assets/117_sample.png)
+
+```
+Share
+Given a binary tree
+
+struct Node {
+  int val;
+  Node *left;
+  Node *right;
+  Node *next;
+}
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.
+
+Initially, all next pointers are set to NULL.
+
+ 
+
+Follow up:
+
+You may only use constant extra space.
+Recursive approach is fine, you may assume implicit stack space does not count as extra space for this problem.
+ 
+
+Example 1:
+
+
+
+Input: root = [1,2,3,4,5,null,7]
+Output: [1,#,2,3,#,4,5,7,#]
+Explanation: Given the above binary tree (Figure A), your function should populate each next pointer to point to its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, with '#' signifying the end of each level.
+ 
+
+Constraints:
+
+The number of nodes in the given tree is less than 6000.
+-100 <= node.val <= 100
+```
+
+## 297. Serialize and Deserialize Binary Tree
+
+```
+Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+
+Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+
+Example: 
+
+You may serialize the following tree:
+
+    1
+   / \
+  2   3
+     / \
+    4   5
+
+as "[1,2,3,null,null,4,5]"
+Clarification: The above format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+
+Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
 ```
 
