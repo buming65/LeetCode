@@ -21,13 +21,36 @@
 
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
+    #Solution 1. Sort the array, then traverse the array, O(nlogn)
+    '''
     def findRepeatNumber(self, nums: List[int]) -> int:
         nums.sort()
-        pre = nums[0]
-
+        temp = nums[0]
         for i in range(1, len(nums)):
-            if pre == nums[i]:
-                return pre
-            pre = nums[i]
+            if temp == nums[i]:
+                return temp
+            temp = nums[i]
+    '''
+
+    #Solution 2. HashMap, O(n) space O(n)
+    '''
+    def findRepeatNumber(self, nums: List[int]) -> int:
+        dic = {}
+        for i in range(len(nums)):
+            if nums[i] not in dic:
+                dic[nums[i]] = 0
+            else:
+                return nums[i]
+                
+    '''
+
+    #Solution 3. Index, O(n) Space O(1)
+    def findRepeatNumber(self, nums: List[int]) -> int:
+        for i in range(len(nums)):
+            while nums[i] != i:
+                if nums[i] == nums[nums[i]]:
+                    return nums[i]
+                nums[nums[i]], nums[i] = nums[i], nums[nums[i]]
+        return None
 
 # leetcode submit region end(Prohibit modification and deletion)

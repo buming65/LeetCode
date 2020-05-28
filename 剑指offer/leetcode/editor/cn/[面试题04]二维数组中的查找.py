@@ -36,5 +36,19 @@
 
 # leetcode submit region begin(Prohibit modification and deletion)
 class Solution:
+    #Solution 1. Left Bottom index O(M+N) O(1)
     def findNumberIn2DArray(self, matrix: List[List[int]], target: int) -> bool:
+        i, j = len(matrix) - 1, 0
+
+        while i >= 0 and j < len(matrix[0]):
+            if matrix[i][j] > target:
+                i -= 1
+            elif matrix[i][j] < target:
+                j += 1
+            else:
+                return True
+
+        return False
+
+
 # leetcode submit region end(Prohibit modification and deletion)

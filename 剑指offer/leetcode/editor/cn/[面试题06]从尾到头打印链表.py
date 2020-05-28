@@ -23,5 +23,23 @@
 #         self.next = None
 
 class Solution:
+    #Solution 1. BackTrack
+    '''
     def reversePrint(self, head: ListNode) -> List[int]:
+        if not head:
+            return []
+        ans = self.reversePrint(head.next)
+        ans.append(head.val)
+        return ans
+    '''
+
+    #Solution 2. Stack
+    def reversePrint(self, head: ListNode) -> List[int]:
+        stack = []
+        while head:
+            stack.append(head.val)
+            head = head.next
+        return stack[::-1]
+
+
 # leetcode submit region end(Prohibit modification and deletion)
