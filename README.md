@@ -554,7 +554,7 @@ $$
 * All edge weights are nonnegative.
 * Maintains a set $S$ of vertices whose final shortest-path weights from the source $s$ have already been determined. Then repeatedly selects the vertex $u\in\ V-S$ with the minimum shortest-path estimate, adds $u$ to $S$, relaxes all edges leaving $u$.
 * ![image-20200404193510937](README.assets/image-20200404193510937.png)
-* ![image-20200404201030560](README.assets/image-20200404201030560.png)
+* ![image-20200404201030560](README.assets/image-20200404201030560-1591514894330.png)
 * Run time is $O(n^2)$
 
 ### Kruskal Algorithm
@@ -563,19 +563,19 @@ $$
 
 * Find the minimum weight edge.
 
-* ![image-20200404204853401](README.assets/image-20200404204853401.png)
+* ![image-20200404204853401](README.assets/image-20200404204853401-1591513776948.png)
 
-* ![image-20200404205217467](README.assets/image-20200404205217467.png)
+* ![image-20200404205217467](README.assets/image-20200404205217467-1591510702289.png)
 
-  ![image-20200404205407658](README.assets/image-20200404205407658.png)
+  ![image-20200404205407658](README.assets/image-20200404205407658-1591510841736.png)
 
 * Run time is $O(ElogV)$
 
 ### Prim Algorithm
 
 * Based on Greedy Algorithm, To find the Minimum Spanning Trees.
-* ![image-20200404210354208](README.assets/image-20200404210354208.png)
-* ![image-20200404205112869](README.assets/image-20200404205112869.png)
+* ![image-20200404210354208](README.assets/image-20200404210354208-1591513795112.png)
+* ![image-20200404205112869](README.assets/image-20200404205112869-1591513820432.png)
 
 * Run time is $O(E+VlogV)$
 
